@@ -11,6 +11,18 @@ out of use (my smartphone does not fit there), so I wanted to fill up that unuse
 a device which reads data from the car's OBDII interface, and display Engine Load, Coolant temp. 
 and other metrics.
 
+## Usage
+
+### Display
+
+- There is a led strip (6 green, 2 yellow, 1 red) which is supposed to display the Engine Load
+- LCD display shows more information, based on it'smode set by push button
+
+### Buttons
+
+- Power On: power supply from the car's USB outlet
+- Push button: change modes, display different metrics on LCD: coolant temp, distance to empty, etc.
+
 ## Status
 
 This is a pilot project, right now it only prints some random stuff, and the Engine Load 
