@@ -1,74 +1,39 @@
-# esp32-i2c-lcd1602-example
+# esp32-obd2
 
-[![Build Status](https://travis-ci.org/DavidAntliff/esp32-i2c-lcd1602-example.svg?branch=master)](https://travis-ci.org/DavidAntliff/esp32-i2c-lcd1602-example)
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
+OBDII based car diagnostics dashboard.
 
-## Introduction
+# Circuit
 
-This is an example application for the HD4470-compatible LCD1602 device connected via an I2C backpack.
+## Pinout on shift register's board
 
-It is written and tested for v2.1.1 and v3.0 of the [ESP-IDF](https://github.com/espressif/esp-idf) environment, using the xtensa-esp32-elf toolchain (gcc version 5.2.0).
+This board has no circuit documentation right now. The board is responsible for driving 
+8 leds that are supposed to display Engine Load: 6 green, 2 yellow.
 
-Ensure that submodules are cloned:
+1-8: Leds
+16: 3.3V
+15: GND from ESP32
+14: CLK
+13: LATCH
+12: DATA
+11: GND for display LEDs
 
-    $ git clone --recursive https://github.com/DavidAntliff/esp32-i2c-lcd1602-example.git
+## Pinout on ESP32
 
-Build the application with:
+### Driving shift register (Engine Load)
 
-    $ cd esp32-i2c-lcd1602-example.git
-    $ make menuconfig    # set your serial configuration and the I2C GPIO - see below
-    $ make flash monitor
+GPIO 32: LATCH
+GPIO 25: DATA
+GPIO 33: CLOCK
 
-The program should detect your connected device and display some demonstration text on the LCD.
+### Driving LCD 1602 display
 
-## Dependencies
+GPIO 26: DATA
+GPIO 27: CLOCK
 
-This application makes use of the following components (included as submodules):
+### Driving last LED of Engine Load display (red)
 
- * components/[esp32-smbus](https://github.com/DavidAntliff/esp32-smbus)
- * components/[esp32-i2c-lcd1602](https://github.com/DavidAntliff/esp32-i2c-lcd1602)
+GPIO 12: Red LED
 
-## Hardware
+### Switch input (mode selection for LCD display)
 
-To run this example, connect one LCD1602 device to two GPIOs on the ESP32 (I2C SDA and SCL). If external pull-up resistors are not provided with the sensor, add a 10 KOhm resistor from each GPIO to the 3.3V supply.
-
-`make menuconfig` can be used to set the I2C GPIOs and LCD1602 device I2C address.
-
-## Features
-
-This example steps through the features of the esp32-i2c-lcd1602 component. It demonstrates:
-
- * Display initialisation, disabling and enabling, clearing.
- * Backlight control.
- * Underline and blinking cursor control, including arbitrary cursor movement and homing.
- * Display scrolling.
- * Custom character definition.
- * Display of all characters.
-
-Each step waits for a keypress on stdin before executing. If stdin is not available (no USB/UART available), modify the following code:
-
-```
-//#define USE_STDIN  1
-#undef USE_STDIN
-```
-
-Each step will then wait for one second before proceeding automatically.
-
-## Source Code
-
-The source is available from [GitHub](https://www.github.com/DavidAntliff/esp32-i2c-lcd1602-example).
-
-## License
-
-The code in this project is licensed under the MIT license - see LICENSE for details.
-
-## Links
-
- * [HD44780 Dot Matrix Liquid Crystal Display Controller/Driver datasheet](https://www.sparkfun.com/datasheets/LCD/HD44780.pdf)
- * [Espressif IoT Development Framework for ESP32](https://github.com/espressif/esp-idf)
-
-## Acknowledgements
-
- * "I2C" is a registered trademark of Phillips Corporation.
- * "SMBus" is a trademark of Intel Corporation.
- 
+GPIO 34: Mode selection (1.5K Ohm to GND, 1K Ohm to signal)
