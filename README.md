@@ -4,16 +4,23 @@ OBDII based car diagnostics dashboard.
 
 ![Board](https://raw.githubusercontent.com/akos-sereg/esp32-obd2/master/docs/board.jpg)
 
-# Status
+## Purpose of this project
+
+There is a smartphone holder hole in the center dashboard's lower section in my car, which is 
+out of use (my smartphone does not fit there), so I wanted to fill up that unused space with 
+a device which reads data from the car's OBDII interface, and display Engine Load, Coolant temp. 
+and other metrics.
+
+## Status
 
 This is a pilot project, right now it only prints some random stuff, and the Engine Load 
 display is also in demo mode. I am testing the display in the car to validate that it's not 
 disturbing at night / and visible in daylight. Later on it will pull data from OBD2 interface 
 via bluetooth.
 
-# Circuit
+## Circuit
 
-## Pinout on shift register's board
+### Pinout on shift register's board
 
 This board has no circuit documentation right now. The board is responsible for driving 
 8 leds that are supposed to display Engine Load: 6 green, 2 yellow.
@@ -26,7 +33,7 @@ This board has no circuit documentation right now. The board is responsible for 
 - 12: DATA
 - 11: GND for display LEDs
 
-## Pinout on ESP32
+### Pinout on ESP32
 
 ### Driving shift register (Engine Load)
 

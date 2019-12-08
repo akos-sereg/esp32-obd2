@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := esp32-i2c-lcd1602-example
+PROJECT_NAME := esp32-obd2
 
 include $(IDF_PATH)/make/project.mk
 
