@@ -2,6 +2,13 @@
 
 OBDII based car diagnostics dashboard.
 
+# Status
+
+This is a pilot project, right now it only prints some random stuff, and the Engine Load 
+display is also in demo mode. I am testing the display in the car to validate that it's not 
+disturbing at night / and visible in daylight. Later on it will pull data from OBD2 interface 
+via bluetooth.
+
 # Circuit
 
 ## Pinout on shift register's board
