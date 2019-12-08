@@ -2,6 +2,8 @@
 
 OBDII based car diagnostics dashboard.
 
+![Board](https://raw.githubusercontent.com/akos-sereg/esp32-obd2/master/docs/board.jpg)
+
 # Status
 
 This is a pilot project, right now it only prints some random stuff, and the Engine Load 

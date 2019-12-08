@@ -28,7 +28,7 @@ void main_task(void * pvParameter)
 	cnt++;
 	if (cnt == 10) {
 	    cnt = 0;
-	    vTaskDelay(750 / portTICK_RATE_MS);
+	    vTaskDelay(500 / portTICK_RATE_MS);
 	}
 
 	vTaskDelay(50 / portTICK_RATE_MS);
