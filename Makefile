@@ -5,5 +5,7 @@
 
 PROJECT_NAME := esp32-obd2
 
+COMPONENT_ADD_INCLUDEDIRS := components/include
+
 include $(IDF_PATH)/make/project.mk
 

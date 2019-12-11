@@ -8,7 +8,7 @@ OBDII based car diagnostics dashboard.
 
 There is a smartphone holder hole in the center dashboard's lower section in my car, which is 
 out of use (my smartphone does not fit there), so I wanted to fill up that unused space with 
-a device which reads data from the car's OBDII interface, and display Engine Load, Coolant temp. 
+a device which reads data from the car's OBDII interface, and displays Engine Load, Coolant temp. 
 and other metrics.
 
 ## Usage
@@ -65,3 +65,14 @@ This board has no circuit documentation right now. The board is responsible for 
 ### Switch input (mode selection for LCD display)
 
 - GPIO 34: Mode selection (1.5K Ohm to GND, 1K Ohm to signal)
+
+## ESP-IDF
+
+espressif/esp-idf commit hash 451f69cc2e11cf45e3a72905c9fb162ca9a08936
+
+## Configure
+
+Get your OBD2 bluetooth device's name (plug into your car, check what device you see on your smartphone). 
+Update `main/bluetooth.c`, find `device_name` and set it to your OBD2 device name.
+
+

@@ -11,6 +11,7 @@
 #include "include/engine-load-leds.h"
 #include "include/switches.h"
 #include "include/lcd.h"
+#include "include/bluetooth.h"
 
 #define TAG "app"
 
@@ -22,8 +23,12 @@ void main_task(void * pvParameter)
     i2c_master_init();
     refresh_lcd_display();
 
+    // initialize bluetooth connection for OBD2 communication
+    if (CONNECT_BLUETOOTH) {
+	init_bluetooth();
+    }
+
     while(1) {
-	printf("Display %d\n", cnt);
 	engine_load_set(cnt);
 	cnt++;
 	if (cnt == 10) {
