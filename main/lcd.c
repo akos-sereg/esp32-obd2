@@ -35,6 +35,16 @@ void i2c_master_init(void)
     i2c_lcd1602_set_backlight(lcd_info, true);
 }
 
+void lcd_display_text(char *line1, char *line2) {
+    i2c_lcd1602_clear(lcd_info);
+    i2c_lcd1602_write_string(lcd_info, line1);
+
+    if (line2 != NULL) {
+	i2c_lcd1602_move_cursor(lcd_info, 0, 1);
+	i2c_lcd1602_write_string(lcd_info, line2);
+    }
+}
+
 void refresh_lcd_display() {
     i2c_lcd1602_set_backlight(lcd_info, true);
     switch (LCD_DISPLAY_MODE) {

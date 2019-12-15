@@ -13,6 +13,7 @@
 
 extern void i2c_master_init(void);
 extern void refresh_lcd_display();
+extern void lcd_display_text(char *line1, char *line2);
 
 i2c_lcd1602_info_t *lcd_info;
 
