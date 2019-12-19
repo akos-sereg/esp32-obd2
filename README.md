@@ -75,4 +75,10 @@ espressif/esp-idf commit hash 451f69cc2e11cf45e3a72905c9fb162ca9a08936
 Get your OBD2 bluetooth device's name (plug into your car, check what device you see on your smartphone). 
 Update `main/bluetooth.c`, find `device_name` and set it to your OBD2 device name.
 
+## Build
 
+Options choose step:
+    1. idf.py menuconfig.
+    2. enter menuconfig "Component config", choose "Bluetooth"
+    3. enter menu Bluetooth, choose "Classic Bluetooth" and "SPP Profile"
+    4. choose your options.
