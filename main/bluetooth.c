@@ -39,13 +39,17 @@ static struct timeval time_new, time_old;
 static long data_num = 0;
 static char buf[1024];
 
-static const esp_spp_sec_t sec_mask = ESP_SPP_SEC_AUTHENTICATE;
+// static const esp_spp_sec_t sec_mask_authenticate = ESP_SPP_SEC_AUTHENTICATE;
+static const esp_spp_sec_t sec_mask_authorize = ESP_SPP_SEC_AUTHORIZE;
 static const esp_spp_role_t role_master = ESP_SPP_ROLE_MASTER;
 
 static esp_bd_addr_t peer_bd_addr;
 static uint8_t peer_bdname_len;
 static char peer_bdname[ESP_BT_GAP_MAX_BDNAME_LEN + 1];
-static const char remote_device_name[] = "ESP_SPP_ACCEPTOR";
+// static const char remote_device_name[] = "CBT.";
+// static const char remote_device_addr[] = "00:0d:18:3a:61:fc"; // OBD2 device
+static const char remote_device_addr[] = "30:ae:a4:6a:a9:7a"; // Test device
+
 static const esp_bt_inq_mode_t inq_mode = ESP_BT_INQ_MODE_GENERAL_INQUIRY;
 static const uint8_t inq_len = 30;
 static const uint8_t inq_num_rsps = 0;
@@ -117,8 +121,11 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
     case ESP_SPP_DISCOVERY_COMP_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_DISCOVERY_COMP_EVT status=%d scn_num=%d",param->disc_comp.status, param->disc_comp.scn_num);
         if (param->disc_comp.status == ESP_SPP_SUCCESS) {
-            esp_spp_connect(sec_mask, role_master, param->disc_comp.scn[0], peer_bd_addr);
+            // esp_spp_connect(sec_mask_authenticate, role_master, param->disc_comp.scn[0], peer_bd_addr);
         }
+
+        printf("Total number of Channels: %d\n", param->disc_comp.scn_num);
+        esp_spp_connect(sec_mask_authorize, role_master, param->disc_comp.scn[0], peer_bd_addr);
         break;
     case ESP_SPP_OPEN_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_OPEN_EVT");
@@ -206,16 +213,99 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
     }
 }
 
+/*
+
+et up I2C
+Set up SMBus
+Set up LCD1602 device with backlight offI (1212) SPP_INITIATOR_DEMO: ESP_BT_GAP_DISC_STATE_CHANGED_EVT
+I (1232) SPP_INITIATOR_DEMO: ESP_BT_GAP_DISC_RES_EVT
+I (1232) SPP_INITIATOR_DEMO: 00 0d 18 3a 61 fc
+Device found, not sure if name exist
+Device found, not sure if name exist
+I (2042) SPP_INITIATOR_DEMO: ESP_BT_GAP_DISC_RES_EVT
+I (2042) SPP_INITIATOR_DEMO: 00 0d 18 3a 61 fc
+Device found, not sure if name exist
+Device found, not sure if name exist
+
+ (1222) gpio: GPIO[34]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:1
+Set up I2C
+Set up SMBus
+Set up LCD1602 device with backlight offI (1232) SPP_INITIATOR_DEMO: ESP_BT_GAP_DISC_STATE_CHANGED_EVT
+I (1242) SPP_INITIATOR_DEMO: ESP_BT_GAP_DISC_RES_EVT
+I (1242) SPP_INITIATOR_DEMO: 00 0d 18 3a 61 fc
+Device found, not sure if name exist
+Device found, not sure if name exist
+I (1262) SPP_INITIATOR_DEMO: ESP_BT_GAP_DISC_STATE_CHANGED_EVT
+I (1262) SPP_INITIATOR_DEMO: ESP_SPP_DISCOVERY_COMP_EVT status=2 scn_num=0
+I (1262) SPP_INITIATOR_DEMO: ESP_BT_GAP_DISC_STATE_CHANGED_EVT
+I (1402) SPP_INITIATOR_DEMO: ESP_SPP_DISCOVERY_COMP_EVT status=1 scn_num=0
+
+
+Set up I2C
+Set up SMBus
+Set up LCD1602 device with backlight offI (1212) SPP_INITIATOR_DEMO: ESP_BT_GAP_DISC_STATE_CHANGED_EVT
+I (9962) SPP_INITIATOR_DEMO: ESP_BT_GAP_DISC_RES_EVT
+I (9962) SPP_INITIATOR_DEMO: 00 0d 18 3a 61 fc
+Device found, not sure if name exist, param->disc_res.prop[i].type = 2, eir: 0x3ffcce4c
+Device found, not sure if name exist, param->disc_res.prop[i].type = 3, eir: 0x3ffba193
+I (9992) SPP_INITIATOR_DEMO: ESP_BT_GAP_DISC_STATE_CHANGED_EVT
+I (9992) SPP_INITIATOR_DEMO: ESP_SPP_DISCOVERY_COMP_EVT status=2 scn_num=0
+E (9992) BT_LOG: Only ESP_SPP_SEC_AUTHORIZE is supported!
+
+I (10002) SPP_INITIATOR_DEMO: ESP_BT_GAP_DISC_STATE_CHANGED_EVT
+I (10272) SPP_INITIATOR_DEMO: ESP_SPP_DISCOVERY_COMP_EVT status=1 scn_num=0
+E (10272) BT_LOG: Only ESP_SPP_SEC_AUTHORIZE is supported!
+
+
+
+
+*/
+
 static void esp_bt_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param)
 {
+    char bt_address[64];
+
     switch(event){
     case ESP_BT_GAP_DISC_RES_EVT:
         ESP_LOGI(SPP_TAG, "ESP_BT_GAP_DISC_RES_EVT");
         esp_log_buffer_hex(SPP_TAG, param->disc_res.bda, ESP_BD_ADDR_LEN);
-        for (int i = 0; i < param->disc_res.num_prop; i++){
+
+        sprintf(bt_address, "%02x:%02x:%02x:%02x:%02x:%02x",
+          param->disc_res.bda[0],
+          param->disc_res.bda[1],
+          param->disc_res.bda[2],
+          param->disc_res.bda[3],
+          param->disc_res.bda[4],
+          param->disc_res.bda[5]);
+
+        if (strncmp(remote_device_addr, bt_address, strlen(remote_device_addr)) == 0) {
+
+          printf("OBD2 device found: %s\n", bt_address);
+
+          memcpy(peer_bd_addr, param->disc_res.bda, ESP_BD_ADDR_LEN);
+          esp_spp_start_discovery(peer_bd_addr);
+          esp_bt_gap_cancel_discovery();
+        } else {
+          printf("Device found, but it is not the target device: %s\n", bt_address);
+        }
+
+        /*for (int i = 0; i < param->disc_res.num_prop; i++){
+
+            printf("Device found, not sure if name exist, param->disc_res.prop[i].type = %d, eir: %p\n",
+              param->disc_res.prop[i].type,
+              param->disc_res.prop[i].val);
+
+            memcpy(peer_bd_addr, param->disc_res.bda, ESP_BD_ADDR_LEN);
+            esp_spp_start_discovery(peer_bd_addr);
+            esp_bt_gap_cancel_discovery();
+
+
             if (param->disc_res.prop[i].type == ESP_BT_GAP_DEV_PROP_EIR
                 && get_name_from_eir(param->disc_res.prop[i].val, peer_bdname, &peer_bdname_len)){
                 esp_log_buffer_char(SPP_TAG, peer_bdname, peer_bdname_len);
+                if (peer_bdname_len > 0) {
+                  printf("Device found: %s\n", peer_bdname);
+                }
                 if (strlen(remote_device_name) == peer_bdname_len
                     && strncmp(peer_bdname, remote_device_name, peer_bdname_len) == 0) {
                     memcpy(peer_bd_addr, param->disc_res.bda, ESP_BD_ADDR_LEN);
@@ -223,7 +313,7 @@ static void esp_bt_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *pa
                     esp_bt_gap_cancel_discovery();
                 }
             }
-        }
+        }*/
         break;
     case ESP_BT_GAP_DISC_STATE_CHANGED_EVT:
         ESP_LOGI(SPP_TAG, "ESP_BT_GAP_DISC_STATE_CHANGED_EVT");
