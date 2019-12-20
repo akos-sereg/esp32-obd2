@@ -26,6 +26,7 @@ void main_task(void * pvParameter)
   app_state.obd2_bluetooth.displaying_connected_elapsed_ms = 0;
   app_state.obd2_bluetooth.displaying_connecting_elapsed_ms = 0;
   app_state.obd2_bluetooth.displayed_connected = 0;
+  app_state.obd2_bluetooth.is_connected = 0;
 
   engine_load_init();
   setup_switches();
@@ -43,13 +44,13 @@ void main_task(void * pvParameter)
       if (app_state.obd2_bluetooth.displaying_connected) {
         app_state.obd2_bluetooth.displaying_connected_elapsed_ms += 500;
       }
-      if (!bt_is_connected) {
+      if (!app_state.obd2_bluetooth.is_connected) {
         app_state.obd2_bluetooth.displaying_connecting_elapsed_ms += 500;
       }
     }
 
     // connected to bluetooth, notify user on display for a couple of seconds
-    if (bt_is_connected
+    if (app_state.obd2_bluetooth.is_connected
       && !app_state.obd2_bluetooth.displaying_connected
       && !app_state.obd2_bluetooth.displayed_connected) {
         lcd_display_text("Connected to", "OBD2");
@@ -66,7 +67,7 @@ void main_task(void * pvParameter)
       }
     }
 
-    if (!bt_is_connected) {
+    if (!app_state.obd2_bluetooth.is_connected) {
         app_state.obd2_bluetooth.displaying_connecting_elapsed_ms += tick_rate_ms;
     } else {
         app_state.obd2_bluetooth.displaying_connecting_elapsed_ms = 0;

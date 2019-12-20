@@ -22,6 +22,7 @@
 #include "esp_spp_api.h"
 #include "include/bt_common.h"
 #include "include/protocol.h"
+#include "include/state.h"
 
 #include "time.h"
 #include "sys/time.h"
@@ -132,13 +133,13 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 	printf("Writing 'ping 8' to acceptor\n");
         // esp_spp_write(param->srv_open.handle, SPP_DATA_LEN, spp_data);
 	bt_handle = param->srv_open.handle;
-	bt_is_connected = 1;
+	app_state.obd2_bluetooth.is_connected = 1;
 	bt_send_data("hello world");
         gettimeofday(&time_old, NULL);
         break;
     case ESP_SPP_CLOSE_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_CLOSE_EVT");
-	bt_is_connected = 0;
+	app_state.obd2_bluetooth.is_connected = 0;
         break;
     case ESP_SPP_START_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_START_EVT");

@@ -3,6 +3,9 @@
 
 typedef struct app_state_t {
   struct obd2_bluetooth {
+    /* true, if we have bluetooth connection with OBD2 device */
+    int is_connected;
+
     /* if true, we are displaying the message "Connected to OBD2" on LCD display */
     int displaying_connected;
 
