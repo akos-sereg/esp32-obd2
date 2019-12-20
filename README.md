@@ -72,8 +72,8 @@ espressif/esp-idf commit hash 451f69cc2e11cf45e3a72905c9fb162ca9a08936
 
 ## Configure
 
-Get your OBD2 bluetooth device's name (plug into your car, check what device you see on your smartphone). 
-Update `main/bluetooth.c`, find `device_name` and set it to your OBD2 device name.
+Get your OBD2 bluetooth device's address (plug into your car, check what device you see on your smartphone). 
+Update `main/bluetooth.c`, find `remote_device_addr` and set it to your OBD2 device's address.
 
 ## Build
 
