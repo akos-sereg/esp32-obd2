@@ -1,21 +1,6 @@
-#include <stdio.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "esp_system.h"
-#include "driver/gpio.h"
-#include "driver/i2c.h"
-#include "esp_log.h"
-#include "sdkconfig.h"
-#include "rom/uart.h"
+#include "include/app_main.h"
 
-#include "include/engine-load-leds.h"
-#include "include/switches.h"
-#include "include/lcd.h"
-#include "include/bluetooth.h"
-#include "include/protocol.h"
-#include "include/state.h"
-
-#define TAG "app"
+// #define TAG "app"
 
 void main_task(void * pvParameter)
 {
@@ -61,7 +46,7 @@ void main_task(void * pvParameter)
             app_state.obd2_bluetooth.displayed_connected = 1;
         }
 
-        // connected to bluetooth OBD2, display data
+        // connected to bluetooth OBD2 already, displaying data
         if (app_state.obd2_bluetooth.displaying_connected) {
             app_state.obd2_bluetooth.displaying_connected_elapsed_ms += 50;
             if (app_state.obd2_bluetooth.displaying_connected_elapsed_ms > 3000) {
@@ -70,6 +55,7 @@ void main_task(void * pvParameter)
             }
         }
 
+        // connecting to bluetooth
         if (!app_state.obd2_bluetooth.is_connected) {
             app_state.obd2_bluetooth.displaying_connecting_elapsed_ms += tick_rate_ms;
         } else {
@@ -77,6 +63,8 @@ void main_task(void * pvParameter)
         }
 
         if (app_state.obd2_bluetooth.displaying_connecting_elapsed_ms > 10000) {
+            // could not connect to bluetooth, or connection is lost for 10 seconds
+            // leaving a message on LCD display and rebooting esp32 device (restart tro reconnect)
             lcd_display_text("Connecting to", "OBD2 (2)");
             esp_restart();
         }
