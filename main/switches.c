@@ -32,22 +32,22 @@ void listen_switches(void* arg)
 
     for(;;) {
         if(xQueueReceive(gpio_evt_queue, &io_num, portMAX_DELAY)) {
-	    vTaskDelay(50 / portTICK_RATE_MS);
+            vTaskDelay(50 / portTICK_RATE_MS);
 
-	    current_state = gpio_get_level(io_num);
+            current_state = gpio_get_level(io_num);
 
-	    if (io_num == GPIO_INPUT_IO && SWITCH_1_STATE != current_state) {
-		printf("GPIO[%d] state: %d\n", io_num, current_state);
-		SWITCH_1_STATE = current_state;
+            if (io_num == GPIO_INPUT_IO && SWITCH_1_STATE != current_state) {
+                printf("GPIO[%d] state: %d\n", io_num, current_state);
+                SWITCH_1_STATE = current_state;
 
-		if (current_state == 1) {
-		    LCD_DISPLAY_MODE++;
-		    if (LCD_DISPLAY_MODE == (MAX_LCD_DISPLAY_MODE + 1)) {
-			LCD_DISPLAY_MODE = 0;
-		    }
-		    refresh_lcd_display();
-		}
-	    }
+                if (current_state == 1) {
+                    LCD_DISPLAY_MODE++;
+                    if (LCD_DISPLAY_MODE == (MAX_LCD_DISPLAY_MODE + 1)) {
+                        LCD_DISPLAY_MODE = 0;
+                    }
+                    refresh_lcd_display();
+                }
+            }
         }
     }
 }
