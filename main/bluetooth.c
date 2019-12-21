@@ -36,17 +36,16 @@
 
 static const esp_spp_mode_t esp_spp_mode = ESP_SPP_MODE_CB;
 
-static struct timeval time_new, time_old;
-static long data_num = 0;
-static char buf[1024];
+// static long data_num = 0;
+// static char buf[1024];
 
 // static const esp_spp_sec_t sec_mask_authenticate = ESP_SPP_SEC_AUTHENTICATE;
 static const esp_spp_sec_t sec_mask_authorize = ESP_SPP_SEC_AUTHORIZE;
 static const esp_spp_role_t role_master = ESP_SPP_ROLE_MASTER;
 
 static esp_bd_addr_t peer_bd_addr;
-static uint8_t peer_bdname_len;
-static char peer_bdname[ESP_BT_GAP_MAX_BDNAME_LEN + 1];
+// static uint8_t peer_bdname_len;
+// static char peer_bdname[ESP_BT_GAP_MAX_BDNAME_LEN + 1];
 // static const char remote_device_name[] = "CBT.";
 // static const char remote_device_addr[] = "00:0d:18:3a:61:fc"; // OBD2 device
 static const char remote_device_addr[] = "30:ae:a4:6a:a9:7a"; // Test device
@@ -56,25 +55,11 @@ static const uint8_t inq_len = 30;
 static const uint8_t inq_num_rsps = 0;
 static int display_num = 0;
 
-#if (SPP_SHOW_MODE == SPP_SHOW_DATA)
 #define SPP_DATA_LEN 20
-#else
-#define SPP_DATA_LEN ESP_SPP_MAX_MTU
-#endif
+
 static uint8_t spp_data[SPP_DATA_LEN];
 
-static void print_speed(void)
-{
-    float time_old_s = time_old.tv_sec + time_old.tv_usec / 1000000.0;
-    float time_new_s = time_new.tv_sec + time_new.tv_usec / 1000000.0;
-    float time_interval = time_new_s - time_old_s;
-    float speed = data_num * 8 / time_interval / 1000.0;
-    ESP_LOGI(SPP_TAG, "speed(%fs ~ %fs): %f kbit/s" , time_old_s, time_new_s, speed);
-    data_num = 0;
-    time_old.tv_sec = time_new.tv_sec;
-    time_old.tv_usec = time_new.tv_usec;
-}
-
+/*
 static bool get_name_from_eir(uint8_t *eir, char *bdname, uint8_t *bdname_len)
 {
     uint8_t *rmt_bdname = NULL;
@@ -105,7 +90,7 @@ static bool get_name_from_eir(uint8_t *eir, char *bdname, uint8_t *bdname_len)
     }
 
     return false;
-}
+}*/
 
 static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 {
@@ -130,12 +115,12 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
         break;
     case ESP_SPP_OPEN_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_OPEN_EVT");
-	printf("Writing 'ping 8' to acceptor\n");
+        printf("Writing 'ping 8' to acceptor\n");
         // esp_spp_write(param->srv_open.handle, SPP_DATA_LEN, spp_data);
-	bt_handle = param->srv_open.handle;
-	app_state.obd2_bluetooth.is_connected = 1;
-	bt_send_data("hello world");
-        gettimeofday(&time_old, NULL);
+        bt_handle = param->srv_open.handle;
+        app_state.obd2_bluetooth.is_connected = 1;
+        bt_send_data("hello world");
+        // gettimeofday(&time_old, NULL);
         break;
     case ESP_SPP_CLOSE_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_CLOSE_EVT");
@@ -178,30 +163,21 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 
         break;
     case ESP_SPP_CONG_EVT:
-#if (SPP_SHOW_MODE == SPP_SHOW_DATA)
         //ESP_LOGI(SPP_TAG, "ESP_SPP_CONG_EVT cong=%d", param->cong.cong);
-#endif
         /*if (param->cong.cong == 0) {
             esp_spp_write(param->cong.handle, SPP_DATA_LEN, spp_data);
         }*/
         break;
     case ESP_SPP_WRITE_EVT:
-#if (SPP_SHOW_MODE == SPP_SHOW_DATA)
 
-	printf("ESP_SPP_WRITE_EVT\n");
-	display_num++;
-	if (display_num == 100) {
-    	    ESP_LOGI(SPP_TAG, "ESP_SPP_WRITE_EVT len=%d cong=%d", param->write.len , param->write.cong);
-    	    esp_log_buffer_hex("",spp_data,SPP_DATA_LEN);
-	    display_num = 0;
-	}
-#else
-        gettimeofday(&time_new, NULL);
-        data_num += param->write.len;
-        if (time_new.tv_sec - time_old.tv_sec >= 3) {
-            print_speed();
+        printf("ESP_SPP_WRITE_EVT\n");
+        display_num++;
+        if (display_num == 100) {
+                ESP_LOGI(SPP_TAG, "ESP_SPP_WRITE_EVT len=%d cong=%d", param->write.len , param->write.cong);
+                esp_log_buffer_hex("",spp_data,SPP_DATA_LEN);
+            display_num = 0;
         }
-#endif
+
         if (param->write.cong == 0) {
             // esp_spp_write(param->write.handle, SPP_DATA_LEN, spp_data);
         }
