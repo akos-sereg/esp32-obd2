@@ -2,6 +2,7 @@
 #include "include/bt_common.h"
 
 char bt_response_data[BT_RESPONSE_DATA_MAXLEN];
+int bt_response_data_len = 0;
 
 void bt_send_data(char *data) {
     uint8_t bt_request_data[BT_REQUEST_DATA_MAXLEN];

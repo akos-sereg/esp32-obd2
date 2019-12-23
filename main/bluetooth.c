@@ -147,6 +147,8 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 	    bt_response_data[i] = param->data_ind.data[i];
 	}
 
+	bt_response_data_len = param->data_ind.len;
+
 	/*if (param->data_ind.len < 1023) {
 
 	    for (int i=0; i!=param->data_ind.len; i++) {

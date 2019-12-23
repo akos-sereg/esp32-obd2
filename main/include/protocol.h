@@ -10,6 +10,7 @@
 #define BT_REQUEST_DATA_MAXLEN		32
 
 extern char bt_response_data[BT_RESPONSE_DATA_MAXLEN];
+extern int bt_response_data_len;
 
 extern void bt_send_data(char *);
 
