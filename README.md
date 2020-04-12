@@ -4,6 +4,16 @@ OBDII based car diagnostics dashboard.
 
 ![Board](https://raw.githubusercontent.com/akos-sereg/esp32-obd2/master/docs/board.jpg)
 
+## Checkpoint
+
+This branch "working-checkpoint-spp-client" is:
+ - starting up, initialize bluetooth classic client
+ - tries to connect to a specific MAC address (spp server) defined in bluetooth.c
+ - this service can be a smartphone app: eg "BT SPP Server"
+ - note: android app should be open, screen should be at Settings/Bluetooth in order to allow esp32 client to connect (not sure why)
+ - once esp32 (this app) connects, android app displays that a client connected
+ - commands issued on android app are displayed on esp32 output (see bluetooth.c)
+
 ## Purpose of this project
 
 There is a smartphone holder hole in the center dashboard's lower section in my car, which is 
