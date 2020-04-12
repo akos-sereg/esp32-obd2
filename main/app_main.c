@@ -62,8 +62,8 @@ void main_task(void * pvParameter)
             app_state.obd2_bluetooth.displaying_connecting_elapsed_ms = 0;
         }
 
-        if (app_state.obd2_bluetooth.displaying_connecting_elapsed_ms > 10000) {
-            // could not connect to bluetooth, or connection is lost for 10 seconds
+        if (app_state.obd2_bluetooth.displaying_connecting_elapsed_ms > 15000) {
+            // could not connect to bluetooth, or connection is lost for 15 seconds
             // leaving a message on LCD display and rebooting esp32 device (restart tro reconnect)
             lcd_display_text("Connecting to", "OBD2 (2)");
             esp_restart();
