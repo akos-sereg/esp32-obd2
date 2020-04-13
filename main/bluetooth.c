@@ -114,7 +114,39 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
         printf("Not connecting, status is: %d\n", param->disc_comp.status);
         if (param->disc_comp.status == ESP_SPP_SUCCESS) {
             //esp_spp_connect(sec_mask_authenticate, role_master, param->disc_comp.scn[0], peer_bd_addr);
-            esp_spp_connect(sec_mask_authorize, role_master, param->disc_comp.scn[0], peer_bd_addr);
+
+            // calculation
+            // service: 00001101-0000-1000-8000-00805f9b34fb <--- based on android app that discovered Classic BT SPS service uuid
+            //
+            // 0: 0x00
+            // 1: 0x00
+            // 2: 0x11
+            // 3: 0x01
+            // 4: 0x00
+            // 5: 0x00
+            // 6: 0x10
+            // 7: 0x00
+            // 8: 0x80
+            // 9: 0x00
+            // 10: 0x00
+            // 11: 0x80
+            // 12: 0x5f
+            // 13: 0x9b
+            // 14: 0x34
+            // 15: 0xfb
+            int i;
+            int shiftAmount;
+            uint8_t myScn = 0;
+
+            char myScnBytes[] = { 0x00, 0x00, 0x11, 0x01, 0x00, 0x00, 0x10, 0x00, 0x80, 0x00, 0x00, 0x80, 0x5f, 0x9b, 0x34, 0xfb };
+
+            for (i=0; i < 16; i++) {
+                shiftAmount = ((16) - i - 1) * 8;
+                myScn += (myScnBytes[i]) << shiftAmount;
+            }
+
+            // esp_spp_connect(sec_mask_authorize, role_master, param->disc_comp.scn[0], peer_bd_addr);
+            esp_spp_connect(sec_mask_authorize, role_master, myScn, peer_bd_addr); // <-- connect to a specific device
         }
 
         printf("Not connecting, status is: %d\n", param->disc_comp.status);
