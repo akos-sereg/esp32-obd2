@@ -159,6 +159,7 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 
 	printf("Received data: '%s'\n", bt_response_data);
 	remove_char(bt_response_data, '\n');
+	remove_char(bt_response_data, '\r');
 	handle_command(bt_response_data);
 
 

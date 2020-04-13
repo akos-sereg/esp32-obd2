@@ -23,7 +23,7 @@ void main_task(void * pvParameter)
     lcd_display_text("Connecting to", "Bluetooth OBD2");
 
     while(1) {
-        engine_load_set(cnt);
+        // engine_load_set(cnt);
         cnt++;
 
         if (cnt == 10) {

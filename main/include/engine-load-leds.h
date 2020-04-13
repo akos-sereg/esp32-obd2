@@ -10,6 +10,10 @@
 #define LED_STRIP_RED		12 /* not controlled by SN74HC595N shift register */
 
 extern void engine_load_init();
-extern void engine_load_set(int);
+
+/**
+ * load value can be: 0-9
+ */
+extern void engine_load_set(int load);
 
 #endif
