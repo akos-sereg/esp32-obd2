@@ -111,10 +111,11 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
     case ESP_SPP_DISCOVERY_COMP_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_DISCOVERY_COMP_EVT status=%d scn_num=%d",param->disc_comp.status, param->disc_comp.scn_num);
         printf("Total number of Channels: %d\n", param->disc_comp.scn_num);
-        printf("Not connecting, status is: %d\n", param->disc_comp.status);
+        // printf("Not connecting, status is: %d\n", param->disc_comp.status);
         if (param->disc_comp.status == ESP_SPP_SUCCESS) {
             //esp_spp_connect(sec_mask_authenticate, role_master, param->disc_comp.scn[0], peer_bd_addr);
-
+            esp_spp_connect(sec_mask_authorize, role_master, param->disc_comp.scn[0], peer_bd_addr);
+        } else {
             // calculation
             // service: 00001101-0000-1000-8000-00805f9b34fb <--- based on android app that discovered Classic BT SPS service uuid
             //
@@ -149,7 +150,7 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
             esp_spp_connect(sec_mask_authorize, role_master, myScn, peer_bd_addr); // <-- connect to a specific device
         }
 
-        printf("Not connecting, status is: %d\n", param->disc_comp.status);
+        // printf("Not connecting, status is: %d\n", param->disc_comp.status);
         // esp_spp_connect(sec_mask_authorize, role_master, param->disc_comp.scn[0], peer_bd_addr);
         break;
     case ESP_SPP_OPEN_EVT:
