@@ -17,5 +17,6 @@
 #include "bluetooth.h"
 #include "protocol.h"
 #include "state.h"
+#include "nvs_store.h"
 
 #endif

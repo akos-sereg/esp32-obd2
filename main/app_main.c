@@ -1,7 +1,5 @@
 #include "include/app_main.h"
 
-// #define TAG "app"
-
 void main_task(void * pvParameter)
 {
     int cnt = 0;
@@ -43,6 +41,7 @@ void main_task(void * pvParameter)
         && !app_state.obd2_bluetooth.displaying_connected
         && !app_state.obd2_bluetooth.displayed_connected) {
             lcd_display_text("Connected.", "");
+            engine_load_set(0);
             app_state.obd2_bluetooth.displaying_connected = 1;
             app_state.obd2_bluetooth.displayed_connected = 1;
         }
@@ -67,6 +66,7 @@ void main_task(void * pvParameter)
             // could not connect to bluetooth, or connection is lost for 15 seconds
             // leaving a message on LCD display and rebooting esp32 device (restart tro reconnect)
             lcd_display_text("Restarting ...", "");
+            nvs_shutdown();
             esp_restart();
         }
 
@@ -77,6 +77,12 @@ void main_task(void * pvParameter)
 void app_main()
 {
     init_bluetooth();
+    init_nvs_store();
+
+    // load LCD display mode (page) from NVS memory - refresh_lcd_display() will show
+    // the correct page when it is called
+    LCD_DISPLAY_MODE = get_nvs_value(NVS_KEY_MODE);
+
     reset_app_state();
     xTaskCreate(&main_task, "main_task", 4096, NULL, 5, NULL);
 }

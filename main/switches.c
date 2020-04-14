@@ -1,5 +1,4 @@
 #include "include/switches.h"
-#include "include/lcd.h"
 
 int SWITCH_1_STATE = -1;
 int MAX_LCD_DISPLAY_MODE = 3; /* max value of LCD_DISPLAY_MODE */
@@ -45,6 +44,8 @@ void listen_switches(void* arg)
                     if (LCD_DISPLAY_MODE == (MAX_LCD_DISPLAY_MODE + 1)) {
                         LCD_DISPLAY_MODE = 0;
                     }
+
+                    set_nvs_value(NVS_KEY_MODE, LCD_DISPLAY_MODE);
                     refresh_lcd_display();
                 }
             }
