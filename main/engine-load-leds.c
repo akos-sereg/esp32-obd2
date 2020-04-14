@@ -40,3 +40,28 @@ void engine_load_set(int value) {
     // red led
     gpio_set_level(LED_STRIP_RED, value == 9 ? 1 : 0);
 }
+
+void init_animation() {
+    int i = 0;
+    for (i=0; i!=10; i++) {
+        engine_load_set(i);
+        vTaskDelay(50 / portTICK_RATE_MS);
+    }
+
+    for (i=9; i!=-1; i--) {
+        engine_load_set(i);
+        vTaskDelay(50 / portTICK_RATE_MS);
+    }
+
+    for (i=0; i!=10; i++) {
+        engine_load_set(i);
+        vTaskDelay(50 / portTICK_RATE_MS);
+    }
+
+    for (i=9; i!=-1; i--) {
+        engine_load_set(i);
+        vTaskDelay(50 / portTICK_RATE_MS);
+    }
+
+    engine_load_set(0);
+}

@@ -46,13 +46,15 @@ void lcd_display_text(char *line1, char *line2) {
 }
 
 void refresh_lcd_display() {
+    char line[32];
     i2c_lcd1602_set_backlight(lcd_info, true);
     switch (LCD_DISPLAY_MODE) {
 	case 0:
+	    sprintf(line, "%d km", app_state.obd2_values.distanceToEmptyInKm);
 	    i2c_lcd1602_clear(lcd_info); // also returns to home
 	    i2c_lcd1602_write_string(lcd_info, "Dist. to empty");
 	    i2c_lcd1602_move_cursor(lcd_info, 5, 1);
-	    i2c_lcd1602_write_string(lcd_info, "562 km");
+	    i2c_lcd1602_write_string(lcd_info, line);
 	    break;
 
 	case 1:

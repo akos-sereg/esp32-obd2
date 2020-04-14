@@ -14,7 +14,6 @@
 void handle_command(char *command) {
     int i;
     char value[64];
-    char lcd_line2[256];
 
     printf("Command received: %s\n", command);
 
@@ -40,7 +39,7 @@ void handle_command(char *command) {
     printf("Command value: '%s'\n", value);
 
     if (strncmp(command, "dst", 3) == 0) {
-        sprintf(lcd_line2, "     %s km", value);
-        lcd_display_text("Dist. to empty", lcd_line2);
+        app_state.obd2_values.distanceToEmptyInKm = atoi(value);
+        refresh_lcd_display();
     }
 }

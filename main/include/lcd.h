@@ -3,6 +3,7 @@
 
 #include "smbus.h"
 #include "i2c-lcd1602.h"
+#include "state.h"
 
 #define I2C_MASTER_NUM			I2C_NUM_0
 #define I2C_MASTER_TX_BUF_LEN		0 		// disabled

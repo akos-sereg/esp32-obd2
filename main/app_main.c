@@ -21,6 +21,7 @@ void main_task(void * pvParameter)
     i2c_master_init();
 
     lcd_display_text("Connecting to", "Bluetooth OBD2");
+    init_animation();
 
     while(1) {
         // engine_load_set(cnt);
@@ -41,7 +42,7 @@ void main_task(void * pvParameter)
         if (app_state.obd2_bluetooth.is_connected
         && !app_state.obd2_bluetooth.displaying_connected
         && !app_state.obd2_bluetooth.displayed_connected) {
-            lcd_display_text("Connected to", "OBD2");
+            lcd_display_text("Connected.", "");
             app_state.obd2_bluetooth.displaying_connected = 1;
             app_state.obd2_bluetooth.displayed_connected = 1;
         }
@@ -65,7 +66,7 @@ void main_task(void * pvParameter)
         if (app_state.obd2_bluetooth.displaying_connecting_elapsed_ms > 15000) {
             // could not connect to bluetooth, or connection is lost for 15 seconds
             // leaving a message on LCD display and rebooting esp32 device (restart tro reconnect)
-            lcd_display_text("Connecting to", "OBD2 (2)");
+            lcd_display_text("Restarting ...", "");
             esp_restart();
         }
 
@@ -76,6 +77,7 @@ void main_task(void * pvParameter)
 void app_main()
 {
     init_bluetooth();
+    reset_app_state();
     xTaskCreate(&main_task, "main_task", 4096, NULL, 5, NULL);
 }
 
