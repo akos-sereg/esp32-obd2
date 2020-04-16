@@ -25,5 +25,6 @@ extern int64_t bt_get_last_request_sent();
 extern int64_t get_epoch_milliseconds();
 extern int64_t get_time_last_lcd_data_received();
 extern void reset_time_last_lcd_data_received();
+extern void instant_fetch_lcd_data();
 
 #endif
