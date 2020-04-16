@@ -5,6 +5,7 @@ void main_task(void * pvParameter)
     int cnt = 0;
     int tick_rate_ms = 50;
     int64_t now;
+    int is_lcd_value_request = 0;
 
     // initializing app state
     // see include/state.h fore more details about state fields
@@ -23,7 +24,6 @@ void main_task(void * pvParameter)
     init_animation();
 
     while(1) {
-        // engine_load_set(cnt);
         cnt++;
 
         if (cnt == 10) {
@@ -51,17 +51,32 @@ void main_task(void * pvParameter)
         if (app_state.obd2_bluetooth.is_connected) {
             now = get_epoch_milliseconds();
 
+            if ((get_time_since_last_lcd_data_received() + BT_LCD_DATA_POLLING_INTERVAL) < now) {
+                is_lcd_value_request = 1;
+            }
+
+
             // keep polling when applicable - last response already processed, poll interval elapsed
             if ((bt_get_last_request_sent() + BT_ENGINE_LOAD_POLL_INTERVAL) < now
                 && bt_response_processed) {
-                bt_send_data("01 04\r\n"); // 01 04: get engine load
+                if (is_lcd_value_request) {
+                    bt_send_data("01 05\r\n"); // 01 05: whatever we want to display in LCD
+                } else {
+                    bt_send_data("01 04\r\n"); // 01 04: get engine load
+                }
+
             }
 
             // process incoming data
             if (!bt_response_processed && bt_response_data_len > 0) {
                 remove_char(bt_response_data, '\n');
-            	remove_char(bt_response_data, '\r');
-            	handle_command(bt_response_data);
+                remove_char(bt_response_data, '\r');
+                handle_command(bt_response_data);
+
+                if (is_lcd_value_request) {
+                    reset_time_since_last_lcd_data_received();
+                    is_lcd_value_request = 0;
+                }
 
                 bt_response_processed = 1;
             }

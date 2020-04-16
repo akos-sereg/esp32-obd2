@@ -10,6 +10,7 @@
 #include "driver/gpio.h"
 #include "lcd.h"
 #include "nvs_store.h"
+#include "protocol.h"
 
 #define GPIO_INPUT_IO	    34
 #define GPIO_INPUT_PIN_SEL  (1ULL<<GPIO_INPUT_IO)

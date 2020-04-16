@@ -5,6 +5,7 @@ char bt_response_data[BT_RESPONSE_DATA_MAXLEN];
 int bt_response_data_len = 0;
 int bt_response_processed = 1; // pretend that our starting point is that we processed any data
 int64_t bt_last_request_sent = 0; // epoch in milliseconds
+int64_t time_since_last_lcd_data_received = 0; // epoch in milliseconds
 
 void bt_send_data(char *data) {
     uint8_t bt_request_data[BT_REQUEST_DATA_MAXLEN];
@@ -36,6 +37,14 @@ void bt_send_data(char *data) {
 
 int64_t bt_get_last_request_sent() {
     return bt_last_request_sent;
+}
+
+int64_t get_time_since_last_lcd_data_received() {
+    return time_since_last_lcd_data_received;
+}
+
+void reset_time_since_last_lcd_data_received() {
+    time_since_last_lcd_data_received = get_epoch_milliseconds();
 }
 
 

@@ -23,6 +23,11 @@ and other metrics.
 - Power On: power supply from the car's USB outlet
 - Push button: change modes, display different metrics on LCD: coolant temp, distance to empty, etc.
 
+## Configuration
+
+- Polling interval of Engine Load (led strip): `BT_ENGINE_LOAD_POLL_INTERVAL` in `include/protocol.h`
+- Restart polling Engine Load in case of OBD2 failure: `BT_RESTART_POLLING_ENGINE_LOAD_AFTER` in `include/protocol.h`
+
 ## Status
 
 This is a pilot project, right now it only prints some random stuff, and the Engine Load 

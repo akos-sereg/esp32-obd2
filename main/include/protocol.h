@@ -12,13 +12,17 @@
 #define BT_REQUEST_DATA_MAXLEN		32
 #define BT_ENGINE_LOAD_POLL_INTERVAL 200 // in msec
 #define BT_RESTART_POLLING_ENGINE_LOAD_AFTER    60000 // in msec - in case OBD2 did not respond for a while, restart polling
+#define BT_LCD_DATA_POLLING_INTERVAL 60000 // in msec
 
 extern char bt_response_data[BT_RESPONSE_DATA_MAXLEN];
 extern int bt_response_data_len;
 extern int bt_response_processed;
+int64_t time_since_last_lcd_data_received;
 
 extern void bt_send_data(char *);
 extern int64_t bt_get_last_request_sent();
 extern int64_t get_epoch_milliseconds();
+extern int64_t get_time_since_last_lcd_data_received();
+extern void reset_time_since_last_lcd_data_received();
 
 #endif
