@@ -1,11 +1,3 @@
-/*
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
-
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
@@ -32,24 +24,24 @@
 #define SPP_TAG "SPP_INITIATOR_DEMO"
 #define EXAMPLE_DEVICE_NAME "ESP_SPP_INITIATOR"
 
-#define SPP_SHOW_DATA 0
-#define SPP_SHOW_SPEED 1
-#define SPP_SHOW_MODE SPP_SHOW_DATA    /*Choose show mode: show data or speed*/
+// #define SPP_SHOW_DATA 0
+// #define SPP_SHOW_SPEED 1
+// #define SPP_SHOW_MODE SPP_SHOW_DATA    /*Choose show mode: show data or speed*/
 
 static const esp_spp_mode_t esp_spp_mode = ESP_SPP_MODE_CB;
 
 // static long data_num = 0;
 // static char buf[1024];
 
-// static const esp_spp_sec_t sec_mask_authenticate = ESP_SPP_SEC_AUTHENTICATE;
+// static const esp_spp_sec_t sec_mask_authenticate = ESP_SPP_SEC_AUTHENTICATE; (try-me-out)
 static const esp_spp_sec_t sec_mask_authorize = ESP_SPP_SEC_AUTHORIZE;
-static const esp_spp_role_t role_master = ESP_SPP_ROLE_MASTER; // ESP_SPP_ROLE_SLAVE
+static const esp_spp_role_t role_master = ESP_SPP_ROLE_MASTER; // ESP_SPP_ROLE_SLAVE (try-me-out)
 
 static esp_bd_addr_t peer_bd_addr;
 // static uint8_t peer_bdname_len;
 // static char peer_bdname[ESP_BT_GAP_MAX_BDNAME_LEN + 1];
 // static const char remote_device_name[] = "CBT.";
-// static const char remote_device_addr[] = "00:0d:18:3a:61:fc"; // OBD2 device
+// static const char remote_device_addr[] = "00:0d:18:3a:61:fc"; // OBD2 device (try-me-out)
 // static const char remote_device_addr[] = "30:ae:a4:6a:a9:7a"; // Test device
 static const char remote_device_addr[] = "3c:05:18:7c:76:3d"; // Samsung J5
 
@@ -57,11 +49,11 @@ static const char remote_device_addr[] = "3c:05:18:7c:76:3d"; // Samsung J5
 static const esp_bt_inq_mode_t inq_mode = ESP_BT_INQ_MODE_GENERAL_INQUIRY;
 static const uint8_t inq_len = 30;
 static const uint8_t inq_num_rsps = 0;
-static int display_num = 0;
+// static int display_num = 0;
 
-#define SPP_DATA_LEN 20
+// #define SPP_DATA_LEN 20
 
-static uint8_t spp_data[SPP_DATA_LEN];
+// static uint8_t spp_data[SPP_DATA_LEN];
 
 /*
 static bool get_name_from_eir(uint8_t *eir, char *bdname, uint8_t *bdname_len)
@@ -116,7 +108,7 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
             //esp_spp_connect(sec_mask_authenticate, role_master, param->disc_comp.scn[0], peer_bd_addr);
             esp_spp_connect(sec_mask_authorize, role_master, param->disc_comp.scn[0], peer_bd_addr);
         } else {
-            // calculation
+            // calculation (try-me-out)
             // service: 00001101-0000-1000-8000-00805f9b34fb <--- based on android app that discovered Classic BT SPS service uuid
             //
             // 0: 0x00
@@ -140,7 +132,7 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
             uint8_t myScn = 0;
 
             char myScnBytes[] = { 0x00, 0x00, 0x11, 0x01, 0x00, 0x00, 0x10, 0x00, 0x80, 0x00, 0x00, 0x80, 0x5f, 0x9b, 0x34, 0xfb };
-            // char myScnBytes[] = { 0xfb, 0x34, 0x9b, 0x5f, 0x80, 0x00, 0x00, 0x80, 0x00, 0x10, 0x00, 0x00, 0x01, 0x11, 0x00, 0x00 }; // reverse order
+            // char myScnBytes[] = { 0xfb, 0x34, 0x9b, 0x5f, 0x80, 0x00, 0x00, 0x80, 0x00, 0x10, 0x00, 0x00, 0x01, 0x11, 0x00, 0x00 }; // reverse order (try-me-out)
 
             for (i=0; i < 16; i++) {
                 shiftAmount = ((16) - i - 1) * 8;
@@ -156,11 +148,10 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
         break;
     case ESP_SPP_OPEN_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_OPEN_EVT");
-        printf("Writing 'ping 8' to acceptor\n");
-        // esp_spp_write(param->srv_open.handle, SPP_DATA_LEN, spp_data);
+
         bt_handle = param->srv_open.handle;
         app_state.obd2_bluetooth.is_connected = 1;
-        bt_send_data("hello world");
+        // bt_send_data("hello wor\r\n"); // (try-me-out) newline only
         // gettimeofday(&time_old, NULL);
         break;
     case ESP_SPP_CLOSE_EVT:
@@ -194,7 +185,7 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 	printf("Received data: '%s'\n", bt_response_data);
 	remove_char(bt_response_data, '\n');
 	remove_char(bt_response_data, '\r');
-	handle_command(bt_response_data);
+	// handle_command(bt_response_data);
 
 
 	/*if (param->data_ind.len < 1023) {
@@ -221,16 +212,16 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
     case ESP_SPP_WRITE_EVT:
 
         printf("ESP_SPP_WRITE_EVT\n");
-        display_num++;
+        /*display_num++;
         if (display_num == 100) {
                 ESP_LOGI(SPP_TAG, "ESP_SPP_WRITE_EVT len=%d cong=%d", param->write.len , param->write.cong);
-                esp_log_buffer_hex("",spp_data,SPP_DATA_LEN);
+                // esp_log_buffer_hex("",spp_data,SPP_DATA_LEN);
             display_num = 0;
         }
 
         if (param->write.cong == 0) {
             // esp_spp_write(param->write.handle, SPP_DATA_LEN, spp_data);
-        }
+        }*/
         break;
     case ESP_SPP_SRV_OPEN_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_SRV_OPEN_EVT");
@@ -397,18 +388,6 @@ static void esp_bt_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *pa
 
 void init_bluetooth(void)
 {
-    for (int i = 0; i < SPP_DATA_LEN; ++i) {
-        spp_data[i] = 0;
-    }
-
-    spp_data[0] = 'p';
-    spp_data[1] = 'i';
-    spp_data[2] = 'n';
-    spp_data[3] = 'g';
-    spp_data[4] = ' ';
-    spp_data[5] = '8';
-    spp_data[6] = '\n';
-
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
@@ -465,7 +444,7 @@ void init_bluetooth(void)
      * Set default parameters for Legacy Pairing
      * Use variable pin, input pin code when pairing
      */
-    esp_bt_pin_type_t pin_type = ESP_BT_PIN_TYPE_VARIABLE; // ESP_BT_PIN_TYPE_FIXED
+    esp_bt_pin_type_t pin_type = ESP_BT_PIN_TYPE_VARIABLE; // ESP_BT_PIN_TYPE_FIXED (try-me-out)
     esp_bt_pin_code_t pin_code;
     memcpy(pin_code, "1234", 4);
     esp_bt_gap_set_pin(pin_type, 4, pin_code);

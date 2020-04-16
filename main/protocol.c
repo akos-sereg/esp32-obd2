@@ -3,9 +3,12 @@
 
 char bt_response_data[BT_RESPONSE_DATA_MAXLEN];
 int bt_response_data_len = 0;
+int bt_response_processed = 1; // pretend that our starting point is that we processed any data
+int64_t bt_last_request_sent = 0; // epoch in milliseconds
 
 void bt_send_data(char *data) {
     uint8_t bt_request_data[BT_REQUEST_DATA_MAXLEN];
+    esp_err_t bt_error;
 
     for (int i=0; i!=BT_RESPONSE_DATA_MAXLEN; i++) {
         bt_response_data[i] = 0;
@@ -19,5 +22,26 @@ void bt_send_data(char *data) {
         bt_request_data[i] = data[i];
     }
 
-    esp_spp_write(bt_handle, strlen(data), bt_request_data);
+    printf("Sending data to OBD2: %s", data);
+    bt_error = esp_spp_write(bt_handle, strlen(data), bt_request_data);
+
+    if (bt_error != ESP_OK) {
+        printf("ERROR: %s\n", esp_err_to_name(bt_error));
+    } else {
+        bt_last_request_sent = get_epoch_milliseconds();
+        bt_response_processed = 0;
+        bt_response_data_len = 0;
+    }
+}
+
+int64_t bt_get_last_request_sent() {
+    return bt_last_request_sent;
+}
+
+
+// todo: move this to a helper
+int64_t get_epoch_milliseconds() {
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000LL + (tv.tv_usec / 1000LL));
 }

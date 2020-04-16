@@ -4,6 +4,7 @@ void main_task(void * pvParameter)
 {
     int cnt = 0;
     int tick_rate_ms = 50;
+    int64_t now;
 
     // initializing app state
     // see include/state.h fore more details about state fields
@@ -46,7 +47,35 @@ void main_task(void * pvParameter)
             app_state.obd2_bluetooth.displayed_connected = 1;
         }
 
-        // connected to bluetooth OBD2 already, displaying data
+        // connected to bluetooth, retrieve engine load periodically
+        if (app_state.obd2_bluetooth.is_connected) {
+            now = get_epoch_milliseconds();
+
+            // keep polling when applicable - last response already processed, poll interval elapsed
+            if ((bt_get_last_request_sent() + BT_ENGINE_LOAD_POLL_INTERVAL) < now
+                && bt_response_processed) {
+                bt_send_data("01 04\r\n"); // 01 04: get engine load
+            }
+
+            // process incoming data
+            if (!bt_response_processed && bt_response_data_len > 0) {
+                remove_char(bt_response_data, '\n');
+            	remove_char(bt_response_data, '\r');
+            	handle_command(bt_response_data);
+
+                bt_response_processed = 1;
+            }
+
+            // restart polling if OBD2 did not respond for a while
+            // not sure this is needed - in case led strip got stuck, this might be helpful
+            if (!bt_response_data_len
+                && !bt_response_processed
+                && (bt_get_last_request_sent() + BT_RESTART_POLLING_ENGINE_LOAD_AFTER) < now) {
+                // bt_send_data("01 04\r\n");
+            }
+        }
+
+        // connected to bluetooth OBD2 already, displaying data - one time refresh LCD
         if (app_state.obd2_bluetooth.displaying_connected) {
             app_state.obd2_bluetooth.displaying_connected_elapsed_ms += 50;
             if (app_state.obd2_bluetooth.displaying_connected_elapsed_ms > 3000) {
