@@ -1,4 +1,5 @@
 #include "include/app_main.h"
+#include <inttypes.h>
 
 void main_task(void * pvParameter)
 {
@@ -6,6 +7,7 @@ void main_task(void * pvParameter)
     int tick_rate_ms = 50;
     int64_t now;
     int is_lcd_value_request = 0;
+    int is_lcd_request_sent = 0;
 
     // initializing app state
     // see include/state.h fore more details about state fields
@@ -51,31 +53,40 @@ void main_task(void * pvParameter)
         if (app_state.obd2_bluetooth.is_connected) {
             now = get_epoch_milliseconds();
 
-            if ((get_time_since_last_lcd_data_received() + BT_LCD_DATA_POLLING_INTERVAL) < now) {
+            //printf("Time last received: %" PRId64 " + %d (%" PRId64 ") < %" PRId64 "\n",
+            //get_time_last_lcd_data_received(),
+            //BT_LCD_DATA_POLLING_INTERVAL,
+            //(get_time_last_lcd_data_received() + BT_LCD_DATA_POLLING_INTERVAL),
+            //now);
+
+            if ((get_time_last_lcd_data_received() + BT_LCD_DATA_POLLING_INTERVAL) < now
+                && !bt_waiting_for_response) {
+                // printf(" -> Set LCD request to 1");
                 is_lcd_value_request = 1;
             }
-
 
             // keep polling when applicable - last response already processed, poll interval elapsed
             if ((bt_get_last_request_sent() + BT_ENGINE_LOAD_POLL_INTERVAL) < now
                 && bt_response_processed) {
                 if (is_lcd_value_request) {
-                    bt_send_data("01 05\r\n"); // 01 05: whatever we want to display in LCD
+                    // printf("Sending LCD OBD code\n");
+                    is_lcd_request_sent = 1;
+                    bt_send_data(get_lcd_page_obd_code()); // whatever we want to display on LCD based on current page selection
                 } else {
                     bt_send_data("01 04\r\n"); // 01 04: get engine load
                 }
-
             }
 
             // process incoming data
             if (!bt_response_processed && bt_response_data_len > 0) {
                 remove_char(bt_response_data, '\n');
                 remove_char(bt_response_data, '\r');
-                handle_command(bt_response_data);
+                handle_command(bt_response_data, is_lcd_value_request && is_lcd_request_sent);
 
-                if (is_lcd_value_request) {
-                    reset_time_since_last_lcd_data_received();
+                if (is_lcd_value_request && is_lcd_request_sent) {
+                    reset_time_last_lcd_data_received();
                     is_lcd_value_request = 0;
+                    is_lcd_request_sent = 0;
                 }
 
                 bt_response_processed = 1;

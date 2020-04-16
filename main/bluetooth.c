@@ -183,6 +183,7 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 	bt_response_data[param->data_ind.len] = '\0';
 
 	printf("Received data: '%s'\n", bt_response_data);
+	bt_waiting_for_response = 0;
 	remove_char(bt_response_data, '\n');
 	remove_char(bt_response_data, '\r');
 	// handle_command(bt_response_data);

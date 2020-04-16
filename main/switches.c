@@ -46,7 +46,7 @@ void listen_switches(void* arg)
                     }
 
                     set_nvs_value(NVS_KEY_MODE, LCD_DISPLAY_MODE);
-                    reset_time_since_last_lcd_data_received();
+                    reset_time_last_lcd_data_received();
                     refresh_lcd_display();
                 }
             }

@@ -7,6 +7,6 @@
 #include "engine-load-leds.h"
 #include "lcd.h"
 
-extern void handle_command(char *command);
+extern void handle_command(char *command, int is_lcd_value_request);
 
 #endif

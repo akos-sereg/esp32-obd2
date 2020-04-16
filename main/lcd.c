@@ -1,6 +1,8 @@
 #include "include/lcd.h"
 #include "include/switches.h"
 
+char obd2_code_of_page[32];
+
 void i2c_master_init(void)
 {
     // Set up I2C
@@ -83,4 +85,26 @@ void refresh_lcd_display() {
 	    i2c_lcd1602_set_backlight(lcd_info, false);
 	    break;
     }
+}
+
+char *get_lcd_page_obd_code() {
+    switch(LCD_DISPLAY_MODE) {
+        case 0:
+            sprintf(obd2_code_of_page, "01 05\r\n");
+            return obd2_code_of_page;
+
+        case 1:
+            sprintf(obd2_code_of_page, "01 06\r\n");
+            return obd2_code_of_page;
+
+        case 2:
+            sprintf(obd2_code_of_page, "01 07\r\n");
+            return obd2_code_of_page;
+
+        case 3:
+            sprintf(obd2_code_of_page, "01 08\r\n");
+            return obd2_code_of_page;
+    }
+
+    return NULL;
 }
