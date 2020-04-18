@@ -1,6 +1,11 @@
 #include "include/app_main.h"
 #include <inttypes.h>
 
+
+/**
+W (20619) BT_RFCOMM: port_rfc_closed RFCOMM connection in state 2 closed: Peer connection failed (res: 16)
+I (20619) SPP_INITIATOR_DEMO: ESP_SPP_CLOSE_EVT
+*/
 void main_task(void * pvParameter)
 {
     int cnt = 0;
@@ -53,21 +58,27 @@ void main_task(void * pvParameter)
         if (app_state.obd2_bluetooth.is_connected) {
             now = get_epoch_milliseconds();
 
+
             if ((get_time_last_lcd_data_received() + BT_LCD_DATA_POLLING_INTERVAL) < now
                 && !bt_waiting_for_response) {
                 is_lcd_value_request = 1;
             }
 
+
             // keep polling when applicable - last response already processed, poll interval elapsed
             if ((bt_get_last_request_sent() + BT_ENGINE_LOAD_POLL_INTERVAL) < now
                 && bt_response_processed) {
+
                 if (is_lcd_value_request) {
+
                     is_lcd_request_sent = 1;
                     bt_send_data(get_lcd_page_obd_code()); // OBD PID of current page displayed by LCD
                 } else {
+
                     bt_send_data(obd2_request_calculated_engine_load()); // 01 04: get engine load
                 }
             }
+
 
             // process incoming data
             if (!bt_response_processed && bt_response_data_len > 0) {
@@ -83,6 +94,7 @@ void main_task(void * pvParameter)
 
                 bt_response_processed = 1;
             }
+
 
             // restart polling if OBD2 did not respond for a while
             // not sure this is needed - in case led strip got stuck, this might be helpful

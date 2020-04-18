@@ -8,6 +8,7 @@ int64_t time_last_lcd_data_received = (-1 * BT_LCD_DATA_POLLING_INTERVAL); // ep
 int bt_waiting_for_response = 0;
 
 void bt_send_data(char *data) {
+    printf("bt_send_data(%s)\n", data);
     uint8_t bt_request_data[BT_REQUEST_DATA_MAXLEN];
     esp_err_t bt_error;
 
@@ -28,6 +29,11 @@ void bt_send_data(char *data) {
     bt_request_data[strlen(data)+1] = '\n';
 
     bt_error = esp_spp_write(bt_handle, strlen(data) + 2, bt_request_data);
+
+    //bt_request_data[0] = 0x01;
+    //bt_request_data[1] = 0x04;
+    //bt_request_data[3] = 0xFF;
+    //bt_error = esp_spp_write(bt_handle, 3, bt_request_data);
 
     if (bt_error != ESP_OK) {
         printf("ERROR: %s\n", esp_err_to_name(bt_error));

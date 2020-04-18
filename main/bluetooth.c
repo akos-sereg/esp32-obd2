@@ -29,7 +29,7 @@ static const esp_spp_mode_t esp_spp_mode = ESP_SPP_MODE_CB;
 // static long data_num = 0;
 // static char buf[1024];
 
-// static const esp_spp_sec_t sec_mask_authenticate = ESP_SPP_SEC_AUTHENTICATE; (try-me-out)
+// static const esp_spp_sec_t sec_mask_authenticate = ESP_SPP_SEC_AUTHENTICATE; // OBD2 device says only authorize method is okay
 static const esp_spp_sec_t sec_mask_authorize = ESP_SPP_SEC_AUTHORIZE;
 static const esp_spp_role_t role_master = ESP_SPP_ROLE_MASTER; // ESP_SPP_ROLE_SLAVE (try-me-out)
 
@@ -37,11 +37,11 @@ static esp_bd_addr_t peer_bd_addr;
 // static uint8_t peer_bdname_len;
 // static char peer_bdname[ESP_BT_GAP_MAX_BDNAME_LEN + 1];
 // static const char remote_device_name[] = "CBT.";
-// static const char remote_device_addr[] = "00:0d:18:3a:61:fc"; // OBD2 device (try-me-out)
+static const char remote_device_addr[] = "00:0d:18:3a:61:fc"; // OBD2 device (try-me-out)
 // static const char remote_device_addr[] = "30:ae:a4:6a:a9:7a"; // Test device
-static const char remote_device_addr[] = "3c:05:18:7c:76:3d"; // Samsung J5
+// static const char remote_device_addr[] = "3c:05:18:7c:76:3d"; // Samsung J5
 
-
+uint8_t remote_bda;
 static const esp_bt_inq_mode_t inq_mode = ESP_BT_INQ_MODE_GENERAL_INQUIRY;
 static const uint8_t inq_len = 30;
 static const uint8_t inq_num_rsps = 0;
@@ -99,6 +99,7 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
     case ESP_SPP_DISCOVERY_COMP_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_DISCOVERY_COMP_EVT status=%d scn_num=%d",param->disc_comp.status, param->disc_comp.scn_num);
         printf("Total number of Channels: %d\n", param->disc_comp.scn_num);
+        remote_bda = peer_bd_addr;
         // printf("Not connecting, status is: %d\n", param->disc_comp.status);
         if (param->disc_comp.status == ESP_SPP_SUCCESS) {
             //esp_spp_connect(sec_mask_authenticate, role_master, param->disc_comp.scn[0], peer_bd_addr);
@@ -136,7 +137,8 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
             }
 
             // esp_spp_connect(sec_mask_authorize, role_master, param->disc_comp.scn[0], peer_bd_addr);
-            esp_spp_connect(sec_mask_authorize, role_master, myScn, peer_bd_addr); // <-- connect to a specific device
+            // esp_spp_connect(sec_mask_authorize, role_master, myScn, peer_bd_addr); // <-- connect to a specific device
+            esp_spp_connect(sec_mask_authorize, role_master, 1, peer_bd_addr); // <-- connect to a specific device
         }
 
         // printf("Not connecting, status is: %d\n", param->disc_comp.status);
@@ -145,7 +147,17 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
     case ESP_SPP_OPEN_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_OPEN_EVT");
 
+        if (param->srv_open.handle != NULL) {
+            printf("We have handle, sending PIN\n");
+            //esp_bt_pin_code_t pin_code;
+            //memcpy(pin_code, "1234", 4);
+            //esp_bt_gap_pin_reply(remote_bda, true, 4, pin_code);
+        } else {
+            printf("We have no handle\n");
+        }
+
         bt_handle = param->srv_open.handle;
+        // bt_send_data("01 04\r\n");
         app_state.obd2_bluetooth.is_connected = 1;
         // bt_send_data("hello wor\r\n"); // (try-me-out) newline only
         // gettimeofday(&time_old, NULL);
@@ -275,6 +287,7 @@ E (10272) BT_LOG: Only ESP_SPP_SEC_AUTHORIZE is supported!
 
 
 */
+
 
 static void esp_bt_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param)
 {
@@ -441,7 +454,8 @@ void init_bluetooth(void)
      * Set default parameters for Legacy Pairing
      * Use variable pin, input pin code when pairing
      */
-    esp_bt_pin_type_t pin_type = ESP_BT_PIN_TYPE_VARIABLE; // ESP_BT_PIN_TYPE_FIXED (try-me-out)
+    // esp_bt_pin_type_t pin_type = ESP_BT_PIN_TYPE_VARIABLE; // ESP_BT_PIN_TYPE_FIXED (try-me-out)
+    esp_bt_pin_type_t pin_type = ESP_BT_PIN_TYPE_VARIABLE;
     esp_bt_pin_code_t pin_code;
     memcpy(pin_code, "1234", 4);
     esp_bt_gap_set_pin(pin_type, 4, pin_code);
