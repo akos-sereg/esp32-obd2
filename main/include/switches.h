@@ -9,7 +9,7 @@
 #include "freertos/queue.h"
 #include "driver/gpio.h"
 #include "lcd.h"
-#include "nvs_store.h"
+#include "nvs-store.h"
 #include "protocol.h"
 
 #define GPIO_INPUT_IO	    34

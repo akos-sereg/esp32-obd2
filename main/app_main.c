@@ -8,7 +8,6 @@ void main_task(void * pvParameter)
     int64_t now;
     int is_lcd_value_request = 0;
     int is_lcd_request_sent = 0;
-    char obd_command[32];
 
     // initializing app state
     // see include/state.h fore more details about state fields

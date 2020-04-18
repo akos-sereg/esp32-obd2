@@ -1,5 +1,4 @@
 #include "include/protocol.h"
-#include "include/bt_common.h"
 
 char bt_response_data[BT_RESPONSE_DATA_MAXLEN];
 int bt_response_data_len = 0;

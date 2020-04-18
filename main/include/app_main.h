@@ -18,7 +18,7 @@
 #include "bluetooth.h"
 #include "protocol.h"
 #include "state.h"
-#include "nvs_store.h"
+#include "nvs-store.h"
 #include "string-helper.h"
 #include "command-handler.h"
 #include "obd2.h"

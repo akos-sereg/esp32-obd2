@@ -12,14 +12,10 @@
 #include "esp_gap_bt_api.h"
 #include "esp_bt_device.h"
 #include "esp_spp_api.h"
-#include "include/bt_common.h"
-#include "include/protocol.h"
-#include "include/state.h"
-#include "include/command-handler.h"
-#include "include/string-helper.h"
-
 #include "time.h"
 #include "sys/time.h"
+
+#include "include/bluetooth.h"
 
 #define SPP_TAG "SPP_INITIATOR_DEMO"
 #define EXAMPLE_DEVICE_NAME "ESP_SPP_INITIATOR"

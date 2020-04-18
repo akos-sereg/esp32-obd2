@@ -1,4 +1,4 @@
-#include "include/nvs_store.h"
+#include "include/nvs-store.h"
 
 nvs_handle_t app_nvs_handle;
 esp_err_t nvs_error;

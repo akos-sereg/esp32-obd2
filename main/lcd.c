@@ -1,5 +1,4 @@
 #include "include/lcd.h"
-#include "include/switches.h"
 
 void i2c_master_init(void)
 {

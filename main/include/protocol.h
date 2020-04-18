@@ -8,6 +8,8 @@
 #include "sys/time.h"
 #include "esp_spp_api.h"
 
+#include "bt-common.h"
+
 #define BT_RESPONSE_DATA_MAXLEN		32
 #define BT_REQUEST_DATA_MAXLEN		32
 #define BT_ENGINE_LOAD_POLL_INTERVAL 200 // in msec
