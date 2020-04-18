@@ -1,8 +1,6 @@
 #include "include/lcd.h"
 #include "include/switches.h"
 
-char obd2_code_of_page[32];
-
 void i2c_master_init(void)
 {
     // Set up I2C
@@ -95,20 +93,16 @@ char *get_lcd_page_obd_code() {
     switch(LCD_DISPLAY_MODE) {
         case 0:
             // fetching fuel level, this is required to calculate "Distance to empty"
-            sprintf(obd2_code_of_page, "01 %s\r\n", OBD_PID_FUEL_LEVEL);
-            return obd2_code_of_page;
+            return obd2_request_fuel_level();
 
         case 1:
-            sprintf(obd2_code_of_page, "01 %s\r\n", OBD_PID_ENGINE_COOLANT_TEMP);
-            return obd2_code_of_page;
+            return obd2_request_engine_coolant_temp();
 
         case 2:
-            sprintf(obd2_code_of_page, "01 %s\r\n", OBD_PID_ENGINE_OIL_TEMP);
-            return obd2_code_of_page;
+            return obd2_request_engine_oil_temp();
 
         case 3:
-            sprintf(obd2_code_of_page, "01 %s\r\n", OBD_PID_ENGINE_EXHAUST_FLOW_RATE);
-            return obd2_code_of_page;
+            return obd2_request_engine_exhaust_flow_rate();
     }
 
     return NULL;

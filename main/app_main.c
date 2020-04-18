@@ -64,10 +64,9 @@ void main_task(void * pvParameter)
                 && bt_response_processed) {
                 if (is_lcd_value_request) {
                     is_lcd_request_sent = 1;
-                    bt_send_data(get_lcd_page_obd_code()); // whatever we want to display on LCD based on current page selection
+                    bt_send_data(get_lcd_page_obd_code()); // OBD PID of current page displayed by LCD
                 } else {
-                    sprintf(obd_command, "01 %s\r\n", OBD_PID_CALCULATED_ENGINE_LOAD);
-                    bt_send_data(obd_command); // 01 04: get engine load
+                    bt_send_data(obd2_request_calculated_engine_load()); // 01 04: get engine load
                 }
             }
 
@@ -91,8 +90,7 @@ void main_task(void * pvParameter)
             if (!bt_response_data_len
                 && !bt_response_processed
                 && (bt_get_last_request_sent() + BT_RESTART_POLLING_ENGINE_LOAD_AFTER) < now) {
-                // sprintf(obd_command, "01 %s\r\n", OBD_PID_CALCULATED_ENGINE_LOAD);
-                // bt_send_data(obd_command);
+                // bt_send_data(obd2_request_calculated_engine_load());
             }
         }
 

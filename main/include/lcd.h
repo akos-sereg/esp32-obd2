@@ -4,7 +4,7 @@
 #include "smbus.h"
 #include "i2c-lcd1602.h"
 #include "state.h"
-#include "elm327.h"
+#include "obd2.h"
 
 #define I2C_MASTER_NUM			I2C_NUM_0
 #define I2C_MASTER_TX_BUF_LEN		0 		// disabled
@@ -19,6 +19,5 @@ extern void lcd_display_text(char *line1, char *line2);
 extern char *get_lcd_page_obd_code();
 
 i2c_lcd1602_info_t *lcd_info;
-char obd2_code_of_page[32];
 
 #endif
