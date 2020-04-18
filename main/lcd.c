@@ -62,27 +62,31 @@ void refresh_lcd_display() {
     switch (LCD_DISPLAY_MODE) {
 	case 0:
 	    sprintf(line, "%d km", app_state.obd2_values.distanceToEmptyInKm);
-	    i2c_lcd1602_clear(lcd_info); // also returns to home
+	    i2c_lcd1602_clear(lcd_info);
 	    i2c_lcd1602_write_string(lcd_info, "Dist. to empty");
 	    i2c_lcd1602_move_cursor(lcd_info, 5, 1);
 	    i2c_lcd1602_write_string(lcd_info, line);
 	    break;
 
 	case 1:
-	    i2c_lcd1602_clear(lcd_info); // also returns to home
+	    i2c_lcd1602_clear(lcd_info);
 	    i2c_lcd1602_write_string(lcd_info, "Coolant temp.");
 	    i2c_lcd1602_move_cursor(lcd_info, 5, 1);
 	    i2c_lcd1602_write_string(lcd_info, "92 C");
 	    break;
 
 	case 2:
-	    i2c_lcd1602_clear(lcd_info); // also returns to home
-	    i2c_lcd1602_write_string(lcd_info, "Engine Load");
+	    i2c_lcd1602_clear(lcd_info);
+	    i2c_lcd1602_write_string(lcd_info, "Engine Oil Temp.");
 	    i2c_lcd1602_move_cursor(lcd_info, 5, 1);
-	    i2c_lcd1602_write_string(lcd_info, "67%");
+	    i2c_lcd1602_write_string(lcd_info, "78 C");
 	    break;
 	case 3:
-	    i2c_lcd1602_set_backlight(lcd_info, false);
+	    i2c_lcd1602_clear(lcd_info);
+        i2c_lcd1602_write_string(lcd_info, "Exhaust");
+        i2c_lcd1602_move_cursor(lcd_info, 5, 1);
+        i2c_lcd1602_write_string(lcd_info, "78 kg/h");
+	    // i2c_lcd1602_set_backlight(lcd_info, false);
 	    break;
     }
 }
@@ -90,19 +94,20 @@ void refresh_lcd_display() {
 char *get_lcd_page_obd_code() {
     switch(LCD_DISPLAY_MODE) {
         case 0:
-            sprintf(obd2_code_of_page, "01 05\r\n");
+            // fetching fuel level, this is required to calculate "Distance to empty"
+            sprintf(obd2_code_of_page, "01 %s\r\n", OBD_PID_FUEL_LEVEL);
             return obd2_code_of_page;
 
         case 1:
-            sprintf(obd2_code_of_page, "01 06\r\n");
+            sprintf(obd2_code_of_page, "01 %s\r\n", OBD_PID_ENGINE_COOLANT_TEMP);
             return obd2_code_of_page;
 
         case 2:
-            sprintf(obd2_code_of_page, "01 07\r\n");
+            sprintf(obd2_code_of_page, "01 %s\r\n", OBD_PID_ENGINE_OIL_TEMP);
             return obd2_code_of_page;
 
         case 3:
-            sprintf(obd2_code_of_page, "01 08\r\n");
+            sprintf(obd2_code_of_page, "01 %s\r\n", OBD_PID_ENGINE_EXHAUST_FLOW_RATE);
             return obd2_code_of_page;
     }
 

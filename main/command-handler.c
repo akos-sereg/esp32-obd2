@@ -35,22 +35,23 @@ void handle_command(char *command, int is_lcd_value_request) {
         // switch (LCD_DISPLAY_MODE) { ... }
 
         // command is in form "<cmd> <value>", extracting value ...
-        for (int i=0; i!=strlen(command); i++) {
-            if (i >= 4) {
-                value[i-4] = command[i];
+        char *found = strstr(command, "dst");
+
+        if (found != NULL) {
+            if (strlen(command) >= 3 && command[0] == 'd' && command[1] == 's' && command[2] == 't')
+            for (int i=0; i!=strlen(command); i++) {
+                if (i >= 4) {
+                    value[i-4] = command[i];
+                }
+            }
+
+            value[strlen(command)-4] = '\0';
+            printf("Command value: '%s'\n", value);
+
+            if (strncmp(command, "dst", 3) == 0) {
+                app_state.obd2_values.distanceToEmptyInKm = atoi(value);
+                refresh_lcd_display();
             }
         }
-
-        value[strlen(command)-4] = '\0';
-        printf("Command value: '%s'\n", value);
-
-        if (strncmp(command, "dst", 3) == 0) {
-            app_state.obd2_values.distanceToEmptyInKm = atoi(value);
-            refresh_lcd_display();
-        }
     }
-
-
-
-
 }

@@ -8,6 +8,7 @@ void main_task(void * pvParameter)
     int64_t now;
     int is_lcd_value_request = 0;
     int is_lcd_request_sent = 0;
+    char obd_command[32];
 
     // initializing app state
     // see include/state.h fore more details about state fields
@@ -53,15 +54,8 @@ void main_task(void * pvParameter)
         if (app_state.obd2_bluetooth.is_connected) {
             now = get_epoch_milliseconds();
 
-            //printf("Time last received: %" PRId64 " + %d (%" PRId64 ") < %" PRId64 "\n",
-            //get_time_last_lcd_data_received(),
-            //BT_LCD_DATA_POLLING_INTERVAL,
-            //(get_time_last_lcd_data_received() + BT_LCD_DATA_POLLING_INTERVAL),
-            //now);
-
             if ((get_time_last_lcd_data_received() + BT_LCD_DATA_POLLING_INTERVAL) < now
                 && !bt_waiting_for_response) {
-                // printf(" -> Set LCD request to 1");
                 is_lcd_value_request = 1;
             }
 
@@ -69,11 +63,11 @@ void main_task(void * pvParameter)
             if ((bt_get_last_request_sent() + BT_ENGINE_LOAD_POLL_INTERVAL) < now
                 && bt_response_processed) {
                 if (is_lcd_value_request) {
-                    // printf("Sending LCD OBD code\n");
                     is_lcd_request_sent = 1;
                     bt_send_data(get_lcd_page_obd_code()); // whatever we want to display on LCD based on current page selection
                 } else {
-                    bt_send_data("01 04\r\n"); // 01 04: get engine load
+                    sprintf(obd_command, "01 %s\r\n", OBD_PID_CALCULATED_ENGINE_LOAD);
+                    bt_send_data(obd_command); // 01 04: get engine load
                 }
             }
 
@@ -97,7 +91,8 @@ void main_task(void * pvParameter)
             if (!bt_response_data_len
                 && !bt_response_processed
                 && (bt_get_last_request_sent() + BT_RESTART_POLLING_ENGINE_LOAD_AFTER) < now) {
-                // bt_send_data("01 04\r\n");
+                // sprintf(obd_command, "01 %s\r\n", OBD_PID_CALCULATED_ENGINE_LOAD);
+                // bt_send_data(obd_command);
             }
         }
 
