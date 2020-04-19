@@ -62,37 +62,62 @@ void refresh_lcd_display() {
     }
 
     switch (LCD_DISPLAY_MODE) {
-	case 0:
-	    sprintf(line, "%d km", app_state.obd2_values.distance_to_empty_km);
-	    i2c_lcd1602_clear(lcd_info);
-	    i2c_lcd1602_write_string(lcd_info, "Dist. to empty");
-	    i2c_lcd1602_move_cursor(lcd_info, 5, 1);
-	    i2c_lcd1602_write_string(lcd_info, line);
-	    break;
+        case 0:
+            sprintf(line, "%d km", app_state.obd2_values.distance_to_empty_km);
+            i2c_lcd1602_clear(lcd_info);
+            i2c_lcd1602_write_string(lcd_info, "Dist. to empty");
+            i2c_lcd1602_move_cursor(lcd_info, 5, 1);
+            i2c_lcd1602_write_string(lcd_info, line);
+            break;
 
-	case 1:
-	    sprintf(line, "%d %cC", app_state.obd2_values.coolant_temp_in_celsius, 223);
-	    i2c_lcd1602_clear(lcd_info);
-	    i2c_lcd1602_write_string(lcd_info, "Coolant temp.");
-	    i2c_lcd1602_move_cursor(lcd_info, 5, 1);
-	    i2c_lcd1602_write_string(lcd_info, line);
-	    break;
+        case 1:
+            sprintf(line, "%d %cC", app_state.obd2_values.coolant_temp_in_celsius, 223);
+            i2c_lcd1602_clear(lcd_info);
+            i2c_lcd1602_write_string(lcd_info, "Coolant temp.");
+            i2c_lcd1602_move_cursor(lcd_info, 5, 1);
+            i2c_lcd1602_write_string(lcd_info, line);
+            break;
 
-	case 2:
-	    sprintf(line, "%d %cC", app_state.obd2_values.engine_oil_temp_in_celsius, 223);
-	    i2c_lcd1602_clear(lcd_info);
-	    i2c_lcd1602_write_string(lcd_info, "Engine Oil Temp.");
-	    i2c_lcd1602_move_cursor(lcd_info, 5, 1);
-	    i2c_lcd1602_write_string(lcd_info, line);
-	    break;
-	case 3:
-	    sprintf(line, "%.1f V", app_state.obd2_values.battery_voltage);
-	    i2c_lcd1602_clear(lcd_info);
-        i2c_lcd1602_write_string(lcd_info, "Battery");
-        i2c_lcd1602_move_cursor(lcd_info, 5, 1);
-        i2c_lcd1602_write_string(lcd_info, line);
-	    // i2c_lcd1602_set_backlight(lcd_info, false);
-	    break;
+        case 2:
+            sprintf(line, "%d %cC", app_state.obd2_values.engine_oil_temp_in_celsius, 223);
+            i2c_lcd1602_clear(lcd_info);
+            i2c_lcd1602_write_string(lcd_info, "Engine Oil Temp.");
+            i2c_lcd1602_move_cursor(lcd_info, 5, 1);
+            i2c_lcd1602_write_string(lcd_info, line);
+            break;
+        case 3:
+            // based on http://popupbackpacker.com/wp-content/uploads/2013/12/State-of-Charge-Chart-Typical-Internet.jpg
+
+            if (app_state.obd2_values.battery_voltage > 12.6) {
+                sprintf(line, "%.1f V (100%%)", app_state.obd2_values.battery_voltage);
+            } else if (app_state.obd2_values.battery_voltage > 12.5) {
+                sprintf(line, "%.1f V (90%%)", app_state.obd2_values.battery_voltage);
+            } else if (app_state.obd2_values.battery_voltage > 12.42) {
+                sprintf(line, "%.1f V (80%%)", app_state.obd2_values.battery_voltage);
+            } else if (app_state.obd2_values.battery_voltage > 12.32) {
+                sprintf(line, "%.1f V (70%%)", app_state.obd2_values.battery_voltage);
+            } else if (app_state.obd2_values.battery_voltage > 12.20) {
+                sprintf(line, "%.1f V (60%%)", app_state.obd2_values.battery_voltage);
+            } else if (app_state.obd2_values.battery_voltage > 12.06) {
+                sprintf(line, "%.1f V (50%%)", app_state.obd2_values.battery_voltage);
+            } else if (app_state.obd2_values.battery_voltage > 11.9) {
+                sprintf(line, "%.1f V (40%%)", app_state.obd2_values.battery_voltage);
+            } else if (app_state.obd2_values.battery_voltage > 11.75) {
+                sprintf(line, "%.1f V (30%%)", app_state.obd2_values.battery_voltage);
+            } else if (app_state.obd2_values.battery_voltage > 11.58) {
+                sprintf(line, "%.1f V (20%%)", app_state.obd2_values.battery_voltage);
+            } else if (app_state.obd2_values.battery_voltage > 11.31) {
+                sprintf(line, "%.1f V (10%%)", app_state.obd2_values.battery_voltage);
+            } else {
+                sprintf(line, "%.1f V (0%%)", app_state.obd2_values.battery_voltage);
+            }
+
+            i2c_lcd1602_clear(lcd_info);
+            i2c_lcd1602_write_string(lcd_info, "Battery");
+            i2c_lcd1602_move_cursor(lcd_info, 0, 1);
+            i2c_lcd1602_write_string(lcd_info, line);
+            // i2c_lcd1602_set_backlight(lcd_info, false);
+            break;
     }
 }
 
