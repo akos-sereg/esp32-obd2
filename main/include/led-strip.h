@@ -16,7 +16,7 @@ extern void engine_load_init();
 /**
  * load value can be: 0-9
  */
-extern void engine_load_set(int load);
+extern void led_strip_set(int load);
 
 /**
  * Plays animation when device is initialized

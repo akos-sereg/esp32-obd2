@@ -10,7 +10,7 @@
     This was a design mistake, I was calculating with 8 leds, but driller and
     added one more led to the physical display. Whatever.
 */
-#include "include/engine-load-leds.h"
+#include "include/led-strip.h"
 
 void engine_load_init() {
     // init shift register gpios
@@ -23,8 +23,8 @@ void engine_load_init() {
     gpio_pad_select_gpio(LED_STRIP_RED);
 }
 
-/* set engine load from 0 to 9 */
-void engine_load_set(int value) {
+/* value from 0 to 9 */
+void led_strip_set(int value) {
 
     //gpio_set_level(LED_STRIP_LATCH_GPIO, 1);
     if (value < 0 || value > 9) {
@@ -50,15 +50,15 @@ void init_animation() {
 
     for (j=0; j!=3; j++) {
         for (i=0; i!=10; i++) {
-            engine_load_set(i);
+            led_strip_set(i);
             vTaskDelay(50 / portTICK_RATE_MS);
         }
 
         for (i=9; i!=-1; i--) {
-            engine_load_set(i);
+            led_strip_set(i);
             vTaskDelay(50 / portTICK_RATE_MS);
         }
     }
 
-    engine_load_set(0);
+    led_strip_set(0);
 }

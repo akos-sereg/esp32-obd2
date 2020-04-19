@@ -23,3 +23,7 @@ char *obd2_request_engine_oil_temp() {
 char *obd2_request_battery_voltage() {
     return "01 42";
 }
+
+char *obd2_request_rpm() {
+    return "01 0C";
+}

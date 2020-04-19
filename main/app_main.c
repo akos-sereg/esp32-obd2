@@ -49,7 +49,7 @@ void main_task(void * pvParameter)
         && !app_state.obd2_bluetooth.displaying_connected
         && !app_state.obd2_bluetooth.displayed_connected) {
             lcd_display_text("Connected.", "");
-            engine_load_set(0);
+            led_strip_set(0);
             app_state.obd2_bluetooth.displaying_connected = 1;
             app_state.obd2_bluetooth.displayed_connected = 1;
         }
@@ -58,12 +58,10 @@ void main_task(void * pvParameter)
         if (app_state.obd2_bluetooth.is_connected) {
             now = get_epoch_milliseconds();
 
-
             if ((get_time_last_lcd_data_received() + BT_LCD_DATA_POLLING_INTERVAL) < now
                 && !bt_waiting_for_response) {
                 is_lcd_value_request = 1;
             }
-
 
             // keep polling when applicable - last response already processed, poll interval elapsed
             if ((bt_get_last_request_sent() + BT_ENGINE_LOAD_POLL_INTERVAL) < now
@@ -74,8 +72,7 @@ void main_task(void * pvParameter)
                     is_lcd_request_sent = 1;
                     bt_send_data(get_lcd_page_obd_code()); // OBD PID of current page displayed by LCD
                 } else {
-
-                    bt_send_data(obd2_request_calculated_engine_load()); // 01 04: get engine load
+                    bt_send_data(LED_STRIP_DISPLAYS_RPM ? obd2_request_rpm() : obd2_request_calculated_engine_load());
                 }
             }
 

@@ -37,15 +37,30 @@ void handle_obd2_response(char *obd2_response, int is_lcd_value_request) {
     printf("[OBD Response] values are: a = %d, b = %d\n", a, b);
 
     if (!is_lcd_value_request) {
-        // Engine Load
-        app_state.obd2_values.engine_load = ceil(a / 2.55); // result is a number between 0 to 100 (engine load in %)
-        app_state.obd2_values.engine_load = ceil(app_state.obd2_values.engine_load / 11.1); // result is a number between 0 and 9 (can be displayed on led strip)
-        if (app_state.obd2_values.engine_load > 9) {
-            app_state.obd2_values.engine_load = 9;
+
+        if (LED_STRIP_DISPLAYS_RPM) {
+            // RPM
+            app_state.obd2_values.rpm = ((256 * a) + b) / 4; // value from 0 to 16383
+            printf("RPM is %d\n", app_state.obd2_values.rpm);
+            app_state.obd2_values.rpm = ceil(app_state.obd2_values.rpm * 0.00214285714); // 0.00214285714 = 4200 / 9 where 4200 is the max RPM we want to display when all 9 leds are ON
+            printf("RPM per 9 %d\n", app_state.obd2_values.rpm);
+            if (app_state.obd2_values.rpm > 9) {
+                app_state.obd2_values.rpm = 9;
+            }
+            led_strip_set(app_state.obd2_values.rpm);
+        }
+        else {
+            // Engine Load
+            app_state.obd2_values.engine_load = ceil(a / 2.55); // result is a number between 0 to 100 (engine load in %)
+            app_state.obd2_values.engine_load = ceil(app_state.obd2_values.engine_load / 11.1); // result is a number between 0 and 9 (can be displayed on led strip)
+            if (app_state.obd2_values.engine_load > 9) {
+                app_state.obd2_values.engine_load = 9;
+            }
+
+            printf("Engine Load: %d\n", app_state.obd2_values.engine_load);
+            led_strip_set(app_state.obd2_values.engine_load);
         }
 
-        printf("Engine Load: %d\n", app_state.obd2_values.engine_load);
-        engine_load_set(app_state.obd2_values.engine_load);
     } else {
         switch (LCD_DISPLAY_MODE) {
             case 0:

@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
-#include "engine-load-leds.h"
+#include "led-strip.h"
 #include "lcd.h"
 #include "app_main.h"
 

@@ -19,6 +19,7 @@ typedef struct app_state_t {
     int coolant_temp_in_celsius;
     int engine_oil_temp_in_celsius;
     double battery_voltage;
+    int rpm; // value from 0 to 9
 
   } obd2_values;
 } app_state_t;
