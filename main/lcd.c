@@ -79,10 +79,17 @@ void refresh_lcd_display() {
             break;
 
         case 2:
-            sprintf(line, "%d %cC", app_state.obd2_values.engine_oil_temp_in_celsius, 223);
+            if (app_state.obd2_values.engine_oil_temp_in_celsius > 125) {
+                sprintf(line, "%d %cC (High)", app_state.obd2_values.engine_oil_temp_in_celsius, 223);
+            } else if (app_state.obd2_values.engine_oil_temp_in_celsius > 110) {
+                sprintf(line, "%d %cC (OK)", app_state.obd2_values.engine_oil_temp_in_celsius, 223);
+            } else {
+                sprintf(line, "%d %cC (Warm-up)", app_state.obd2_values.engine_oil_temp_in_celsius, 223);
+            }
+
             i2c_lcd1602_clear(lcd_info);
             i2c_lcd1602_write_string(lcd_info, "Engine Oil Temp.");
-            i2c_lcd1602_move_cursor(lcd_info, 5, 1);
+            i2c_lcd1602_move_cursor(lcd_info, 0, 1);
             i2c_lcd1602_write_string(lcd_info, line);
             break;
         case 3:
