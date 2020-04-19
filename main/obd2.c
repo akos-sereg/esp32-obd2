@@ -20,6 +20,6 @@ char *obd2_request_engine_oil_temp() {
     return "01 5C";
 }
 
-char *obd2_request_engine_exhaust_flow_rate() {
-    return "01 9E";
+char *obd2_request_battery_voltage() {
+    return "01 42";
 }

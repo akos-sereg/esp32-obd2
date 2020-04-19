@@ -51,12 +51,23 @@ void handle_obd2_response(char *obd2_response, int is_lcd_value_request) {
             case 0:
                 // calculate "distance to empty"
                 fuel_level = a / 2.55; // fuel level in % (value from 0 to 100)
-                printf("Fuel level: %f percentage\n", fuel_level);
                 fuel_in_liter = ceil((fuel_level / 100) * FUEL_TANK_LITER);
-                printf("Fuel in liters: %d\n", fuel_in_liter);
-
                 app_state.obd2_values.distance_to_empty_km = ceil((double)(fuel_in_liter / AVERAGE_FUEL_CONSUMPTION_PER_100_KM) * 100);
-                printf("Distance to emtpy: %d\n", app_state.obd2_values.distance_to_empty_km);
+                refresh_lcd_display();
+                break;
+            case 1:
+                // coolant temperature
+                app_state.obd2_values.coolant_temp_in_celsius = a - 40;
+                refresh_lcd_display();
+                break;
+            case 2:
+                // engine oil temp
+                app_state.obd2_values.engine_oil_temp_in_celsius = a - 40;
+                refresh_lcd_display();
+                break;
+            case 3:
+                // battery voltage
+                app_state.obd2_values.battery_voltage = ((255 * a) + b) / 1000;
                 refresh_lcd_display();
                 break;
         }

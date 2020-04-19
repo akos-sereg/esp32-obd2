@@ -74,23 +74,26 @@ void refresh_lcd_display() {
 	    break;
 
 	case 1:
+	    sprintf(line, "%d C", app_state.obd2_values.coolant_temp_in_celsius);
 	    i2c_lcd1602_clear(lcd_info);
 	    i2c_lcd1602_write_string(lcd_info, "Coolant temp.");
 	    i2c_lcd1602_move_cursor(lcd_info, 5, 1);
-	    i2c_lcd1602_write_string(lcd_info, "92 C");
+	    i2c_lcd1602_write_string(lcd_info, line);
 	    break;
 
 	case 2:
+	    sprintf(line, "%d C", app_state.obd2_values.engine_oil_temp_in_celsius);
 	    i2c_lcd1602_clear(lcd_info);
 	    i2c_lcd1602_write_string(lcd_info, "Engine Oil Temp.");
 	    i2c_lcd1602_move_cursor(lcd_info, 5, 1);
-	    i2c_lcd1602_write_string(lcd_info, "78 C");
+	    i2c_lcd1602_write_string(lcd_info, line);
 	    break;
 	case 3:
+	    sprintf(line, "%.1f V", app_state.obd2_values.battery_voltage);
 	    i2c_lcd1602_clear(lcd_info);
-        i2c_lcd1602_write_string(lcd_info, "Exhaust");
+        i2c_lcd1602_write_string(lcd_info, "Battery");
         i2c_lcd1602_move_cursor(lcd_info, 5, 1);
-        i2c_lcd1602_write_string(lcd_info, "78 kg/h");
+        i2c_lcd1602_write_string(lcd_info, line);
 	    // i2c_lcd1602_set_backlight(lcd_info, false);
 	    break;
     }
@@ -109,7 +112,7 @@ char *get_lcd_page_obd_code() {
             return obd2_request_engine_oil_temp();
 
         case 3:
-            return obd2_request_engine_exhaust_flow_rate();
+            return obd2_request_battery_voltage();
     }
 
     return NULL;
