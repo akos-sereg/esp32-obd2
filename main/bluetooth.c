@@ -67,8 +67,7 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 
         bt_handle = param->srv_open.handle;
 
-        // init obd
-        // bt_send_data("AT E0"); // echo off -> try-me-out
+        obd2_init_communication(); // try-me-out
 
         app_state.obd2_bluetooth.is_connected = 1;
 

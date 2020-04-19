@@ -1,0 +1,69 @@
+Toolchain path: /Users/asereg/.espressif/tools/xtensa-esp32-elf/esp-2019r2-8.2.0/xtensa-esp32-elf/bin/xtensa-esp32-elf-gcc
+Toolchain version: esp-2019r2
+Compiler version: 8.2.0
+Python requirements from /Users/asereg/Documents/personal/esp-idf/requirements.txt are satisfied.
+MONITOR
+ets Jun  8 2016 00:22:57
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0018,len:4
+load:0x3fff001c,len:7232
+ho 0 tail 12 room 4
+load:0x40078000,len:14816
+load:0x40080400,len:4456
+entry 0x400806e8
+[0;32mI (76) boot: Chip Revision: 1[0m
+[0;32mI (76) boot_comm: chip revision: 1, min. bootloader chip revision: 0[0m
+[0;32mI (41) boot: ESP-IDF v4.1-dev-1572-g30372f5a4-dirty 2nd stage bootloader[0m
+[0;32mI (41) boot: compile time 23:08:01[0m
+[0;32mI (43) boot: Enabling RNG early entropy source...[0m
+[0;32mI (48) boot: SPI Speed      : 40MHz[0m
+[0;32mI (52) boot: SPI Mode       : DIO[0m
+[0;32mI (56) boot: SPI Flash Size : 4MB[0m
+[0;32mI (60) boot: Partition Table:[0m
+[0;32mI (64) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (71) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (78) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (86) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (93) boot: End of partition table[0m
+[0;32mI (98) boot_comm: chip revision: 1, min. application chip revision: 0[0m
+[0;32mI (105) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x195d4 (103892) map[0m
+[0;32mI (151) esp_image: segment 1: paddr=0x000295fc vaddr=0x3ffbdb60 size=0x02d90 ( 11664) load[0m
+[0;32mI (156) esp_image: segment 2: paddr=0x0002c394 vaddr=0x40080000 size=0x00400 (  1024) load[0m
+[0;32mI (158) esp_image: segment 3: paddr=0x0002c79c vaddr=0x40080400 size=0x0387c ( 14460) load[0m
+[0;32mI (173) esp_image: segment 4: paddr=0x00030020 vaddr=0x400d0020 size=0x64f08 (413448) map[0m
+[0;32mI (323) esp_image: segment 5: paddr=0x00094f30 vaddr=0x40083c7c size=0x105b0 ( 66992) load[0m
+[0;32mI (364) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (364) boot: Disabling RNG early entropy source...[0m
+[0;32mI (364) cpu_start: Pro cpu up.[0m
+[0;32mI (368) cpu_start: Application information:[0m
+[0;32mI (373) cpu_start: Project name:     esp32-obd2[0m
+[0;32mI (378) cpu_start: App version:      31890ae-dirty[0m
+[0;32mI (383) cpu_start: Compile time:     Apr 19 2020 20:12:12[0m
+[0;32mI (390) cpu_start: ELF file SHA256:  731245306be619cf...[0m
+[0;32mI (396) cpu_start: ESP-IDF:          v4.1-dev-1572-g30372f5a4-dirty[0m
+[0;32mI (402) cpu_start: Starting app cpu, entry point is 0x40081264[0m
+[0;32mI (0) cpu_start: App cpu up.[0m
+[0;32mI (413) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (420) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM[0m
+[0;32mI (426) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM[0m
+[0;32mI (432) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM[0m
+[0;32mI (438) heap_init: At 3FFBDB5C len 00000004 (0 KiB): DRAM[0m
+[0;32mI (444) heap_init: At 3FFCA758 len 000158A8 (86 KiB): DRAM[0m
+[0;32mI (450) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (457) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (463) heap_init: At 4009422C len 0000BDD4 (47 KiB): IRAM[0m
+[0;32mI (469) cpu_start: Pro cpu start user code[0m
+[0;32mI (488) spi_flash: detected chip: generic[0m
+[0;32mI (488) spi_flash: flash io: dio[0m
+[0;32mI (488) cpu_start: Starting scheduler on PRO CPU.[0m
+[0;32mI (0) cpu_start: Starting scheduler on APP CPU.[0m
+[0;32mI (520) BTDM_INIT: BT controller compile version [79dd6f1][0m
+[0;32mI (530) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE[0m
+[0;32mI (630) phy: phy_version: 4180, cb3948e, Sep 12 2019, 16:39:13, 0, 0[0m
+[0;32mI (1180) SPP_INITIATOR_DEMO: ESP_SPP_INIT_EVT[0m
+BT SSP Enabled[0;32mI (1200) gpio: GPIO[34]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:1 [0m
+[0;32mI (1210) SPP_INITIATOR_DEMO: ESP_BT_GAP_DISC_STATE_CHANGED_EVT[0m

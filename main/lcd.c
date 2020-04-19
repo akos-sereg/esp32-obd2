@@ -73,7 +73,7 @@ void refresh_lcd_display() {
         case 1:
             sprintf(line, "%d %cC", app_state.obd2_values.coolant_temp_in_celsius, 223);
             i2c_lcd1602_clear(lcd_info);
-            i2c_lcd1602_write_string(lcd_info, "Coolant temp.");
+            i2c_lcd1602_write_string(lcd_info, "Engine Coolant");
             i2c_lcd1602_move_cursor(lcd_info, 5, 1);
             i2c_lcd1602_write_string(lcd_info, line);
             break;
@@ -88,7 +88,7 @@ void refresh_lcd_display() {
             }
 
             i2c_lcd1602_clear(lcd_info);
-            i2c_lcd1602_write_string(lcd_info, "Engine Oil Temp.");
+            i2c_lcd1602_write_string(lcd_info, "Engine Oil");
             i2c_lcd1602_move_cursor(lcd_info, 0, 1);
             i2c_lcd1602_write_string(lcd_info, line);
             break;
