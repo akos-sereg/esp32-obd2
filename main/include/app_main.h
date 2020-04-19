@@ -23,4 +23,10 @@
 #include "command-handler.h"
 #include "obd2.h"
 
+#define FUEL_TANK_LITER                        55
+
+// liter/100km - this one is for "distance to empty" calculation - use upper bound of real consumption
+// to make sure that displayed "distance to empty" value is safe
+#define AVERAGE_FUEL_CONSUMPTION_PER_100_KM    8
+
 #endif

@@ -27,6 +27,9 @@ and other metrics.
 
 - Polling interval of Engine Load (led strip): `BT_ENGINE_LOAD_POLL_INTERVAL` in `include/protocol.h`
 - Restart polling Engine Load in case of OBD2 failure: `BT_RESTART_POLLING_ENGINE_LOAD_AFTER` in `include/protocol.h`
+- Fuel tank in litres: `FUEL_TANK_LITER` in `include/app_main.h`
+- Your OBD2 device's MAC address: `remote_device_addr` in `bluetooth.c`
+- Your car's average fuel consumption: `AVERAGE_FUEL_CONSUMPTION_PER_100_KM` in `include/app_main.h`
 
 ## Status
 

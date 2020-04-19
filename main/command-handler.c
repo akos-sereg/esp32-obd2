@@ -17,6 +17,8 @@ void handle_obd2_response(char *obd2_response, int is_lcd_value_request) {
     int b = -1; // second byte of response
     char *ptr;
     char hex_buf[3];
+    double fuel_level;
+    int fuel_in_liter;
 
     if (strlen(obd2_response) >= 8
         && ((obd2_response[6] >= '0' && obd2_response[6] <= '9') || (obd2_response[6] >= 'A' && obd2_response[6] <= 'F'))
@@ -45,9 +47,19 @@ void handle_obd2_response(char *obd2_response, int is_lcd_value_request) {
         printf("Engine Load: %d\n", app_state.obd2_values.engine_load);
         engine_load_set(app_state.obd2_values.engine_load);
     } else {
-        //switch (LCD_DISPLAY_MODE) {
+        switch (LCD_DISPLAY_MODE) {
+            case 0:
+                // calculate "distance to empty"
+                fuel_level = a / 2.55; // fuel level in % (value from 0 to 100)
+                printf("Fuel level: %f percentage\n", fuel_level);
+                fuel_in_liter = ceil((fuel_level / 100) * FUEL_TANK_LITER);
+                printf("Fuel in liters: %d\n", fuel_in_liter);
 
-        //}
+                app_state.obd2_values.distance_to_empty_km = ceil((double)(fuel_in_liter / AVERAGE_FUEL_CONSUMPTION_PER_100_KM) * 100);
+                printf("Distance to emtpy: %d\n", app_state.obd2_values.distance_to_empty_km);
+                refresh_lcd_display();
+                break;
+        }
     }
 
 }
