@@ -66,8 +66,8 @@ void handle_obd2_response(char *obd2_response, int is_lcd_value_request) {
             case 0:
                 // calculate "distance to empty"
                 fuel_level = a / 2.55; // fuel level in % (value from 0 to 100)
-                fuel_in_liter = ceil((fuel_level / 100) * FUEL_TANK_LITER);
-                app_state.obd2_values.distance_to_empty_km = ceil((double)(fuel_in_liter / AVERAGE_FUEL_CONSUMPTION_PER_100_KM) * 100);
+                fuel_in_liter = ceil((double)(fuel_level / 100) * FUEL_TANK_LITER);
+                app_state.obd2_values.distance_to_empty_km = ((double)fuel_in_liter / AVERAGE_FUEL_CONSUMPTION_PER_100_KM) * 100;
                 refresh_lcd_display();
                 break;
             case 1:
