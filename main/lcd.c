@@ -1,5 +1,13 @@
 #include "include/lcd.h"
 
+/*
+   Adding / modifying LCD display pages:
+   - refresh_lcd_display() to display the text and value
+   - refresh_lcd_display() to know the max number of pages
+   - get_lcd_page_obd_code() to respond the correct OBD PID
+   - command-handler.c - handle_obd2_response() to convert response based on LCD_DISPLAY_MODE
+   - switches.c - MAX_LCD_DISPLAY_MODE to be set (refactor and use this value in refresh_lcd_display)
+*/
 void i2c_master_init(void)
 {
     // Set up I2C

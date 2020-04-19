@@ -26,9 +26,9 @@ static const esp_spp_sec_t sec_mask_authorize = ESP_SPP_SEC_AUTHORIZE;
 static const esp_spp_role_t role_master = ESP_SPP_ROLE_MASTER;
 
 static esp_bd_addr_t peer_bd_addr;
-static const char remote_device_addr[] = "00:0d:18:3a:61:fc"; // OBD2 device (try-me-out)
+// static const char remote_device_addr[] = "00:0d:18:3a:61:fc"; // OBD2 device
 // static const char remote_device_addr[] = "30:ae:a4:6a:a9:7a"; // Test device
-// static const char remote_device_addr[] = "3c:05:18:7c:76:3d"; // Samsung J5
+static const char remote_device_addr[] = "3c:05:18:7c:76:3d"; // Samsung J5
 
 uint8_t remote_bda;
 static const esp_bt_inq_mode_t inq_mode = ESP_BT_INQ_MODE_GENERAL_INQUIRY;
@@ -66,7 +66,12 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
         ESP_LOGI(SPP_TAG, "ESP_SPP_OPEN_EVT");
 
         bt_handle = param->srv_open.handle;
+
+        // init obd
+        // bt_send_data("AT E0"); // echo off -> try-me-out
+
         app_state.obd2_bluetooth.is_connected = 1;
+
         break;
     case ESP_SPP_CLOSE_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_CLOSE_EVT");
@@ -85,7 +90,7 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
         printf("Received data length: %d\n", param->data_ind.len);
 
         // clear response data
-        for (int i=0; i!=BT_RESPONSE_DATA_MAXLEN; i++) {
+        /*for (int i=0; i!=BT_RESPONSE_DATA_MAXLEN; i++) {
             bt_response_data[i] = 0;
         }
 
@@ -94,12 +99,14 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
         }
 
         bt_response_data_len = param->data_ind.len;
-        bt_response_data[param->data_ind.len] = '\0';
+        bt_response_data[param->data_ind.len] = '\0';*/
 
-        printf("Received data: '%s'\n", bt_response_data);
+        bt_response_chunk_received(param->data_ind.data, param->data_ind.len);
+
+        /*printf("Received data: '%s'\n", bt_response_data);
         bt_waiting_for_response = 0;
         remove_char(bt_response_data, '\n');
-        remove_char(bt_response_data, '\r');
+        remove_char(bt_response_data, '\r');*/
 
         break;
     case ESP_SPP_CONG_EVT:
@@ -255,7 +262,7 @@ void init_bluetooth(void)
      * Set default parameters for Legacy Pairing
      * Use variable pin, input pin code when pairing
      */
-    // esp_bt_pin_type_t pin_type = ESP_BT_PIN_TYPE_VARIABLE; // ESP_BT_PIN_TYPE_FIXED (try-me-out)
+
     esp_bt_pin_type_t pin_type = ESP_BT_PIN_TYPE_VARIABLE;
     esp_bt_pin_code_t pin_code;
     memcpy(pin_code, "1234", 4);

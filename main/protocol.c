@@ -1,14 +1,15 @@
 #include "include/protocol.h"
 
 char bt_response_data[BT_RESPONSE_DATA_MAXLEN];
-int bt_response_data_len = 0;
+char bt_response_chunk[BT_RESPONSE_DATA_MAXLEN];
+int bt_response_data_len = 0; // consumers will know that obd2 response is available if this value is greater than 0
+int bt_response_chunk_len = 0;
 int bt_response_processed = 1; // pretend that our starting point is that we processed any data
 int64_t bt_last_request_sent = 0; // epoch in milliseconds
 int64_t time_last_lcd_data_received = (-1 * BT_LCD_DATA_POLLING_INTERVAL); // epoch in milliseconds, pretend that it has been soo long when we received data
 int bt_waiting_for_response = 0;
 
 void bt_send_data(char *data) {
-    printf("bt_send_data(%s)\n", data);
     uint8_t bt_request_data[BT_REQUEST_DATA_MAXLEN];
     esp_err_t bt_error;
 
@@ -30,11 +31,6 @@ void bt_send_data(char *data) {
 
     bt_error = esp_spp_write(bt_handle, strlen(data) + 2, bt_request_data);
 
-    //bt_request_data[0] = 0x01;
-    //bt_request_data[1] = 0x04;
-    //bt_request_data[3] = 0xFF;
-    //bt_error = esp_spp_write(bt_handle, 3, bt_request_data);
-
     if (bt_error != ESP_OK) {
         printf("ERROR: %s\n", esp_err_to_name(bt_error));
     } else {
@@ -42,6 +38,56 @@ void bt_send_data(char *data) {
         bt_response_processed = 0;
         bt_response_data_len = 0;
         bt_waiting_for_response = 1;
+    }
+}
+
+// bt_response_data: populated by chunks (eg. multiple calls of this function_
+// bt_response_data_len: set when last chunk received (eg. EOL sent from OBD2 device)
+//  -> this indicates that response can be processed
+// bt_response_chunk: temporary buffer for chunks - appending this buffer for each call of this method
+// bt_response_chunk_len: current size of chunk
+void bt_response_chunk_received(uint8_t *obd2_response_chunk, int length) {
+
+    for (int i=0; i!=length; i++) {
+        bt_response_chunk[bt_response_chunk_len] = obd2_response_chunk[i];
+        bt_response_chunk_len++;
+    }
+
+    // checking if we have \r\n at the end of the chunk: this means that the response is over
+    // and we can process the OBD response
+    if ((bt_response_chunk_len >= 2
+        && bt_response_chunk[bt_response_chunk_len-2] == '\r'
+        && bt_response_chunk[bt_response_chunk_len-1] == '\n')
+        || (bt_response_chunk_len >= 1 && bt_response_chunk[bt_response_chunk_len-1] == '>')) {
+
+
+        // populate response data
+        for (int i=0; i!=bt_response_chunk_len; i++) {
+            bt_response_data[i] = bt_response_chunk[i];
+        }
+
+        bt_response_data[bt_response_chunk_len] = '\0';
+        remove_char(bt_response_data, '\n');
+        remove_char(bt_response_data, '\r');
+        bt_waiting_for_response = 0;
+        bt_response_data_len = strlen(bt_response_data); // consumers rely on this field - if response data length is set, it will be processed soon
+
+        // clear chunk
+        bt_response_chunk_len = 0;
+
+        printf("[OBD Response] last chunk received, payload is '%s'\n", bt_response_data);
+
+        // handle echo - response payload should not be processed
+        if (bt_response_data_len >= 2 && bt_response_data[0] == '0' && bt_response_data[1] == '1') {
+            printf(" -> ignoring echo response\n");
+            bt_response_data_len = 0;
+        }
+
+        // handle ">" response - response payload should not be processed
+        if (bt_response_data_len >= 1 && bt_response_data[0] == '>') {
+            printf(" -> ignoring command prompt response\n");
+            bt_response_data_len = 0;
+        }
     }
 }
 

@@ -1,6 +1,28 @@
 #include "include/command-handler.h"
 
 /**
+ * By nature, OBD2 returns chunks of data.
+ *
+ */
+void handle_obd2_response(char *obd2_response, int is_lcd_value_request) {
+    // sample responses:
+    //
+    // Request  > 01 04                - Engine Load
+    // Response > 41 04 3E
+    //
+    // Request  > 01 2F                - Fuel Level
+    // Response > 41 2F DE
+
+    if (is_lcd_value_request) {
+        // Engine Load
+    } else {
+        switch (LCD_DISPLAY_MODE) {
+
+        }
+    }
+
+}
+/**
  * Command Examples:
  *
  * Engine Load Indicator
@@ -11,6 +33,7 @@
  * LCD
  *   "dst 236": lcd displays "Dist. to empty: 236 km"
  */
+ /*
 void handle_command(char *command, int is_lcd_value_request) {
     char value[64];
 
@@ -54,4 +77,4 @@ void handle_command(char *command, int is_lcd_value_request) {
             }
         }
     }
-}
+}*/

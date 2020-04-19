@@ -84,7 +84,7 @@ void main_task(void * pvParameter)
             if (!bt_response_processed && bt_response_data_len > 0) {
                 remove_char(bt_response_data, '\n');
                 remove_char(bt_response_data, '\r');
-                handle_command(bt_response_data, is_lcd_value_request && is_lcd_request_sent);
+                handle_obd2_response(bt_response_data, is_lcd_value_request && is_lcd_request_sent);
 
                 if (is_lcd_value_request && is_lcd_request_sent) {
                     reset_time_last_lcd_data_received();

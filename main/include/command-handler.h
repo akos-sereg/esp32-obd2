@@ -7,6 +7,6 @@
 #include "engine-load-leds.h"
 #include "lcd.h"
 
-extern void handle_command(char *command, int is_lcd_value_request);
+extern void handle_obd2_response(char *obd2_response_chunk, int is_lcd_value_request);
 
 #endif
