@@ -66,7 +66,7 @@ void refresh_lcd_display() {
 
     switch (LCD_DISPLAY_MODE) {
 	case 0:
-	    sprintf(line, "%d km", app_state.obd2_values.distanceToEmptyInKm);
+	    sprintf(line, "%d km", app_state.obd2_values.distance_to_empty_km);
 	    i2c_lcd1602_clear(lcd_info);
 	    i2c_lcd1602_write_string(lcd_info, "Dist. to empty");
 	    i2c_lcd1602_move_cursor(lcd_info, 5, 1);

@@ -18,24 +18,32 @@ void handle_obd2_response(char *obd2_response, int is_lcd_value_request) {
     char *ptr;
     char hex_buf[3];
 
-    if (strlen(obd2_response) >= 5
-        && ((obd2_response[3] >= '0' && obd2_response[3] <= '9') || (obd2_response[3] >= 'A' && obd2_response[3] <= 'F'))
-        && ((obd2_response[4] >= '0' && obd2_response[4] <= '9') || (obd2_response[4] >= 'A' && obd2_response[4] <= 'F'))) {
-        sprintf(hex_buf, "%c%c", obd2_response[3], obd2_response[4]);
-        a = strtol(hex_buf, &ptr, 16);
-    }
-
     if (strlen(obd2_response) >= 8
         && ((obd2_response[6] >= '0' && obd2_response[6] <= '9') || (obd2_response[6] >= 'A' && obd2_response[6] <= 'F'))
         && ((obd2_response[7] >= '0' && obd2_response[7] <= '9') || (obd2_response[7] >= 'A' && obd2_response[7] <= 'F'))) {
         sprintf(hex_buf, "%c%c", obd2_response[6], obd2_response[7]);
+        a = strtol(hex_buf, &ptr, 16);
+    }
+
+    if (strlen(obd2_response) >= 11
+        && ((obd2_response[9] >= '0' && obd2_response[9] <= '9') || (obd2_response[9] >= 'A' && obd2_response[9] <= 'F'))
+        && ((obd2_response[10] >= '0' && obd2_response[10] <= '9') || (obd2_response[10] >= 'A' && obd2_response[10] <= 'F'))) {
+        sprintf(hex_buf, "%c%c", obd2_response[9], obd2_response[10]);
         b = strtol(hex_buf, &ptr, 16);
     }
 
     printf("[OBD Response] values are: a = %d, b = %d\n", a, b);
 
-    if (is_lcd_value_request) {
+    if (!is_lcd_value_request) {
         // Engine Load
+        app_state.obd2_values.engine_load = ceil(a / 2.55); // result is a number between 0 to 100 (engine load in %)
+        app_state.obd2_values.engine_load = ceil(app_state.obd2_values.engine_load / 11.1); // result is a number between 0 and 9 (can be displayed on led strip)
+        if (app_state.obd2_values.engine_load > 9) {
+            app_state.obd2_values.engine_load = 9;
+        }
+
+        printf("Engine Load: %d\n", app_state.obd2_values.engine_load);
+        engine_load_set(app_state.obd2_values.engine_load);
     } else {
         //switch (LCD_DISPLAY_MODE) {
 

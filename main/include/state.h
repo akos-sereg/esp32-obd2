@@ -14,7 +14,9 @@ typedef struct app_state_t {
   } obd2_bluetooth;
 
   struct obd2_values {
-    int distanceToEmptyInKm;
+    int engine_load; // value from 0 to 9
+    int distance_to_empty_km;
+
   } obd2_values;
 } app_state_t;
 

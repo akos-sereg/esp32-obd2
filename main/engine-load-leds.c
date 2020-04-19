@@ -27,11 +27,14 @@ void engine_load_init() {
 void engine_load_set(int value) {
 
     //gpio_set_level(LED_STRIP_LATCH_GPIO, 1);
+    if (value < 0 || value > 9) {
+        return;
+    }
 
     for (int i=0; i!=8; i++) {
-	gpio_set_level(LED_STRIP_CLOCK_GPIO, 0);
-	gpio_set_level(LED_STRIP_DATA_GPIO, (7 - value) < i ? 1 : 0);
-	gpio_set_level(LED_STRIP_CLOCK_GPIO, 1);
+        gpio_set_level(LED_STRIP_CLOCK_GPIO, 0);
+        gpio_set_level(LED_STRIP_DATA_GPIO, (7 - value) < i ? 1 : 0);
+	    gpio_set_level(LED_STRIP_CLOCK_GPIO, 1);
     }
 
     gpio_set_level(LED_STRIP_LATCH_GPIO, 1);

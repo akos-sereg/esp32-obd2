@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdio.h>
+#include <math.h>
 #include "engine-load-leds.h"
 #include "lcd.h"
 
