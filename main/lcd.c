@@ -11,7 +11,6 @@
 void i2c_master_init(void)
 {
     // Set up I2C
-    printf("Set up I2C\n");
     int i2c_master_port = I2C_MASTER_NUM;
     i2c_config_t conf;
     conf.mode = I2C_MODE_MASTER;
@@ -28,13 +27,11 @@ void i2c_master_init(void)
     uint8_t address = CONFIG_LCD1602_I2C_ADDRESS;
 
     // Set up the SMBus
-    printf("Set up SMBus\n");
     smbus_info_t * smbus_info = smbus_malloc();
     smbus_init(smbus_info, i2c_num, address);
     smbus_set_timeout(smbus_info, 1000 / portTICK_RATE_MS);
 
-    // Set up the LCD1602 device with backlight off
-    printf("Set up LCD1602 device with backlight off");
+    // Set up the LCD1602 device
     lcd_info = i2c_lcd1602_malloc();
     i2c_lcd1602_init(lcd_info, smbus_info, true);
 
@@ -74,7 +71,7 @@ void refresh_lcd_display() {
 	    break;
 
 	case 1:
-	    sprintf(line, "%d C", app_state.obd2_values.coolant_temp_in_celsius);
+	    sprintf(line, "%d %cC", app_state.obd2_values.coolant_temp_in_celsius, 223);
 	    i2c_lcd1602_clear(lcd_info);
 	    i2c_lcd1602_write_string(lcd_info, "Coolant temp.");
 	    i2c_lcd1602_move_cursor(lcd_info, 5, 1);
@@ -82,7 +79,7 @@ void refresh_lcd_display() {
 	    break;
 
 	case 2:
-	    sprintf(line, "%d C", app_state.obd2_values.engine_oil_temp_in_celsius);
+	    sprintf(line, "%d %cC", app_state.obd2_values.engine_oil_temp_in_celsius, 223);
 	    i2c_lcd1602_clear(lcd_info);
 	    i2c_lcd1602_write_string(lcd_info, "Engine Oil Temp.");
 	    i2c_lcd1602_move_cursor(lcd_info, 5, 1);

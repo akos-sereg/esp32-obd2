@@ -30,6 +30,7 @@ and other metrics.
 - Fuel tank in litres: `FUEL_TANK_LITER` in `include/app_main.h`
 - Your OBD2 device's MAC address: `remote_device_addr` in `bluetooth.c`
 - Your car's average fuel consumption: `AVERAGE_FUEL_CONSUMPTION_PER_100_KM` in `include/app_main.h`
+- Led strip to display Engine Load or RPM: `LED_STRIP_DISPLAYS_RPM` in `include/app_main.h`
 
 ## Status
 

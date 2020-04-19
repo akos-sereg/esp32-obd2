@@ -2,14 +2,6 @@
 
 int SWITCH_1_STATE = -1;
 int MAX_LCD_DISPLAY_MODE = 3; /* max value of LCD_DISPLAY_MODE */
-
-/*
-    Modes:
-      0: Distance to empty
-      1: Coolant temp
-      2: Engine load
-      3: Display off, background light off
-*/
 int LCD_DISPLAY_MODE = 0;
 
 static xQueueHandle gpio_evt_queue = NULL;

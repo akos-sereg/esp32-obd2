@@ -29,6 +29,7 @@
 // to make sure that displayed "distance to empty" value is safe
 #define AVERAGE_FUEL_CONSUMPTION_PER_100_KM    8
 
+// if this value is set to 0, led strip will display Engine Load
 #define LED_STRIP_DISPLAYS_RPM   1
 
 #endif
