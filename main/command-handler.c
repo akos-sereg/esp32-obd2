@@ -13,12 +13,33 @@ void handle_obd2_response(char *obd2_response, int is_lcd_value_request) {
     // Request  > 01 2F                - Fuel Level
     // Response > 41 2F DE
 
+    int a = -1; // first byte of response
+    int b = -1; // second byte of response
+    char *ptr;
+    char hex_buf[3];
+
+    if (strlen(obd2_response) >= 5
+        && ((obd2_response[3] >= '0' && obd2_response[3] <= '9') || (obd2_response[3] >= 'A' && obd2_response[3] <= 'F'))
+        && ((obd2_response[4] >= '0' && obd2_response[4] <= '9') || (obd2_response[4] >= 'A' && obd2_response[4] <= 'F'))) {
+        sprintf(hex_buf, "%c%c", obd2_response[3], obd2_response[4]);
+        a = strtol(hex_buf, &ptr, 16);
+    }
+
+    if (strlen(obd2_response) >= 8
+        && ((obd2_response[6] >= '0' && obd2_response[6] <= '9') || (obd2_response[6] >= 'A' && obd2_response[6] <= 'F'))
+        && ((obd2_response[7] >= '0' && obd2_response[7] <= '9') || (obd2_response[7] >= 'A' && obd2_response[7] <= 'F'))) {
+        sprintf(hex_buf, "%c%c", obd2_response[6], obd2_response[7]);
+        b = strtol(hex_buf, &ptr, 16);
+    }
+
+    printf("[OBD Response] values are: a = %d, b = %d\n", a, b);
+
     if (is_lcd_value_request) {
         // Engine Load
     } else {
-        switch (LCD_DISPLAY_MODE) {
+        //switch (LCD_DISPLAY_MODE) {
 
-        }
+        //}
     }
 
 }

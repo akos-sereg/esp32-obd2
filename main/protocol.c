@@ -25,7 +25,7 @@ void bt_send_data(char *data) {
         bt_request_data[i] = data[i];
     }
 
-    printf("Sending data to OBD2: %s", data);
+    printf("Sending data to OBD2: %s\n", data);
     bt_request_data[strlen(data)] = '\r';
     bt_request_data[strlen(data)+1] = '\n';
 
@@ -86,6 +86,12 @@ void bt_response_chunk_received(uint8_t *obd2_response_chunk, int length) {
         // handle ">" response - response payload should not be processed
         if (bt_response_data_len >= 1 && bt_response_data[0] == '>') {
             printf(" -> ignoring command prompt response\n");
+            bt_response_data_len = 0;
+        }
+
+        // handle other scenarios, when response does not seem to be a valid OBD2 response
+        if (bt_response_data_len >= 2 && (bt_response_data[0] != '4' || bt_response_data[1] != '1')) {
+            printf(" -> ignoring response, looks like this is not a response value, not starting with 41\n");
             bt_response_data_len = 0;
         }
     }
