@@ -1,8 +1,7 @@
 #include "include/command-handler.h"
 
 /**
- * By nature, OBD2 returns chunks of data.
- *
+ * Calculations based on: https://en.wikipedia.org/wiki/OBD-II_PIDs
  */
 void handle_obd2_response(char *obd2_response, int is_lcd_value_request) {
     // sample responses:
