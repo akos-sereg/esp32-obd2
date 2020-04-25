@@ -69,6 +69,7 @@ void bt_response_chunk_received(uint8_t *obd2_response_chunk, int length) {
         bt_response_data[bt_response_chunk_len] = '\0';
         remove_char(bt_response_data, '\n');
         remove_char(bt_response_data, '\r');
+        remove_char(bt_response_data, ' ');
         bt_waiting_for_response = 0;
         bt_response_data_len = strlen(bt_response_data); // consumers rely on this field - if response data length is set, it will be processed soon
 

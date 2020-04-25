@@ -9,7 +9,7 @@ char *obd2_request_battery_voltage() { return "01 42"; }
 char *obd2_request_rpm() { return "01 0C"; }
 
 void obd2_init_communication() {
-    bt_send_data("AT E0"); // echo off
+    // bt_send_data("AT E0"); // echo off
     // bt_send_data("AT L0"); // turns off extra line feed and carriage return
     // bt_send_data("AT H0"); // turns off headers and checksum to be sent
     // bt_send_data("ATAT2"); // turn adaptive timing to 2

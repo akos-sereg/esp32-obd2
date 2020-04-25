@@ -7,10 +7,12 @@ void handle_obd2_response(char *obd2_response, int is_lcd_value_request) {
     // sample responses:
     //
     // Request  > 01 04                - Engine Load
-    // Response > 41 04 3E
+    // Response > 41 04 3E             - or ...
+    // Response > 41043E
     //
     // Request  > 01 2F                - Fuel Level
-    // Response > 41 2F DE
+    // Response > 41 2F DE             - or ...
+    // Response > 412FDE
 
     int a = -1; // first byte of response
     int b = -1; // second byte of response
@@ -19,17 +21,17 @@ void handle_obd2_response(char *obd2_response, int is_lcd_value_request) {
     double fuel_level;
     int fuel_in_liter;
 
+    if (strlen(obd2_response) >= 6
+        && ((obd2_response[4] >= '0' && obd2_response[4] <= '9') || (obd2_response[4] >= 'A' && obd2_response[4] <= 'F'))
+        && ((obd2_response[5] >= '0' && obd2_response[5] <= '9') || (obd2_response[5] >= 'A' && obd2_response[5] <= 'F'))) {
+        sprintf(hex_buf, "%c%c", obd2_response[4], obd2_response[5]);
+        a = strtol(hex_buf, &ptr, 16);
+    }
+
     if (strlen(obd2_response) >= 8
         && ((obd2_response[6] >= '0' && obd2_response[6] <= '9') || (obd2_response[6] >= 'A' && obd2_response[6] <= 'F'))
         && ((obd2_response[7] >= '0' && obd2_response[7] <= '9') || (obd2_response[7] >= 'A' && obd2_response[7] <= 'F'))) {
         sprintf(hex_buf, "%c%c", obd2_response[6], obd2_response[7]);
-        a = strtol(hex_buf, &ptr, 16);
-    }
-
-    if (strlen(obd2_response) >= 11
-        && ((obd2_response[9] >= '0' && obd2_response[9] <= '9') || (obd2_response[9] >= 'A' && obd2_response[9] <= 'F'))
-        && ((obd2_response[10] >= '0' && obd2_response[10] <= '9') || (obd2_response[10] >= 'A' && obd2_response[10] <= 'F'))) {
-        sprintf(hex_buf, "%c%c", obd2_response[9], obd2_response[10]);
         b = strtol(hex_buf, &ptr, 16);
     }
 
@@ -40,23 +42,23 @@ void handle_obd2_response(char *obd2_response, int is_lcd_value_request) {
         if (LED_STRIP_DISPLAYS_RPM) {
             // RPM
             app_state.obd2_values.rpm = ((256 * a) + b) / 4; // value from 0 to 16383
-            printf("RPM is %d\n", app_state.obd2_values.rpm);
             app_state.obd2_values.rpm = ceil(app_state.obd2_values.rpm * 0.00214285714); // 0.00214285714 = 4200 / 9 where 4200 is the max RPM we want to display when all 9 leds are ON
-            printf("RPM per 9 %d\n", app_state.obd2_values.rpm);
+
             if (app_state.obd2_values.rpm > 9) {
                 app_state.obd2_values.rpm = 9;
             }
+
             led_strip_set(app_state.obd2_values.rpm);
         }
         else {
             // Engine Load
             app_state.obd2_values.engine_load = ceil(a / 2.55); // result is a number between 0 to 100 (engine load in %)
             app_state.obd2_values.engine_load = ceil(app_state.obd2_values.engine_load / 11.1); // result is a number between 0 and 9 (can be displayed on led strip)
+
             if (app_state.obd2_values.engine_load > 9) {
                 app_state.obd2_values.engine_load = 9;
             }
 
-            printf("Engine Load: %d\n", app_state.obd2_values.engine_load);
             led_strip_set(app_state.obd2_values.engine_load);
         }
 
