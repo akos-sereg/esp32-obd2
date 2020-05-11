@@ -35,7 +35,7 @@ void handle_obd2_response(char *obd2_response, int is_lcd_value_request) {
         b = strtol(hex_buf, &ptr, 16);
     }
 
-    printf("[OBD Response] values are: a = %d, b = %d\n", a, b);
+    printf("  --> [OBD Response] values are: a = %d, b = %d\n", a, b);
 
     if (!is_lcd_value_request) {
 
@@ -69,21 +69,25 @@ void handle_obd2_response(char *obd2_response, int is_lcd_value_request) {
                 fuel_level = a / 2.55; // fuel level in % (value from 0 to 100)
                 fuel_in_liter = ceil((double)(fuel_level / 100) * FUEL_TANK_LITER);
                 app_state.obd2_values.distance_to_empty_km = ((double)fuel_in_liter / AVERAGE_FUEL_CONSUMPTION_PER_100_KM) * 100;
+                printf("  --> Distance to empty set to: %d\n", app_state.obd2_values.distance_to_empty_km);
                 refresh_lcd_display();
                 break;
             case 1:
                 // coolant temperature
                 app_state.obd2_values.coolant_temp_in_celsius = a - 40;
+                printf("  --> Collant temp set to: %d\n", app_state.obd2_values.coolant_temp_in_celsius);
                 refresh_lcd_display();
                 break;
             case 2:
                 // engine oil temp
                 app_state.obd2_values.engine_oil_temp_in_celsius = a - 40;
+                printf("  --> Engine oil temp: %d\n", app_state.obd2_values.engine_oil_temp_in_celsius);
                 refresh_lcd_display();
                 break;
             case 3:
                 // battery voltage
                 app_state.obd2_values.battery_voltage = ((255 * a) + b) / 1000;
+                printf("  --> Battery Voltage: %f\n", app_state.obd2_values.battery_voltage);
                 refresh_lcd_display();
                 break;
         }

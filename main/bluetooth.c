@@ -83,10 +83,10 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
         ESP_LOGI(SPP_TAG, "ESP_SPP_CL_INIT_EVT");
         break;
     case ESP_SPP_DATA_IND_EVT:
-        ESP_LOGI(SPP_TAG, "ESP_SPP_DATA_IND_EVT");
+        // ESP_LOGI(SPP_TAG, "ESP_SPP_DATA_IND_EVT");
 
         // receive
-        printf("Received data length: %d\n", param->data_ind.len);
+        // printf("Received data length: %d\n", param->data_ind.len);
 
         // clear response data
         /*for (int i=0; i!=BT_RESPONSE_DATA_MAXLEN; i++) {
