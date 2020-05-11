@@ -41,8 +41,9 @@ void handle_obd2_response(char *obd2_response, int is_lcd_value_request) {
 
         if (LED_STRIP_DISPLAYS_RPM) {
             // RPM
-            app_state.obd2_values.rpm = ((256 * a) + b) / 4; // value from 0 to 16383
-            app_state.obd2_values.rpm = ceil(app_state.obd2_values.rpm * 0.00214285714); // 0.00214285714 = 4200 / 9 where 4200 is the max RPM we want to display when all 9 leds are ON
+            app_state.obd2_values.rpm = ((256 * a) + b) / 4; // value from 0 to 16383 -> real RPM value read from OBD
+            app_state.obd2_values.rpm -= BASELINE_RPM; // normalize RPM value to respect 9 leds (otherwise at least the first 2 leds would always be ON)
+            app_state.obd2_values.rpm = ceil(app_state.obd2_values.rpm * (9 / (MAX_RPM_AT_NORMAL_USAGE - BASELINE_RPM))); // calculate how many leds should be ON
 
             if (app_state.obd2_values.rpm > 9) {
                 app_state.obd2_values.rpm = 9;
