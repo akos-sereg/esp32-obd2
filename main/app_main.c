@@ -60,17 +60,20 @@ void main_task(void * pvParameter)
             app_state.obd2_bluetooth.displayed_connected = 1;
         }
 
-        // connected to bluetooth, retrieve engine load periodically
+        // connected to bluetooth, poll data periodically - responses will be handled automatically, we don't have to worry about
+        // processing them and triggering the new requests
         if (app_state.obd2_bluetooth.is_connected) {
             now = get_epoch_milliseconds();
 
-            // sending request - keep polling even if last time we failed to process response
+            // sending request - realtime RPM or Engine Load - keep polling even if last time we failed to process response
             if ((bt_get_last_request_sent() + BT_ENGINE_LOAD_POLL_INTERVAL) < now) {
                 bt_send_data(LED_STRIP_DISPLAYS_RPM ? obd2_request_rpm() : obd2_request_calculated_engine_load());
             }
 
-            if ((get_time_last_lcd_data_received() + BT_LCD_DATA_POLLING_INTERVAL) < now) {
+            // sending request - value for LCD page
+            if ((get_time_last_lcd_data_sent() + BT_LCD_DATA_POLLING_INTERVAL) < now) {
                 bt_send_data(get_lcd_page_obd_code()); // OBD PID of current page displayed by LCD
+                reset_time_last_lcd_data_sent();
             }
         }
 
