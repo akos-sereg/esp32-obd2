@@ -65,9 +65,7 @@ void main_task(void * pvParameter)
             now = get_epoch_milliseconds();
 
             if (bt_response_data_len > 0) {
-                remove_char(bt_response_data, '\n');
-                remove_char(bt_response_data, '\r');
-                handle_obd2_response(bt_response_data, is_lcd_value_request && is_lcd_request_sent);
+                handle_obd2_response(bt_response_data);
 
                 bt_response_data_len = 0; // to make sure that response will not be processed in the next iteration
             }
