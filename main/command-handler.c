@@ -84,8 +84,13 @@ void handle_obd2_response(char *obd2_response) {
     remove_char(req_pattern, ' ');
 
     if (strncmp(req_test, req_pattern, 4) == 0) {
+        int baseline_rpm = 900;
+        int max_rpm = 3600;
+        float magic = 9 / (max_rpm - baseline_rpm);
+
         app_state.obd2_values.rpm = ((256 * a) + b) / 4; // value from 0 to 16383
-        app_state.obd2_values.rpm = ceil(app_state.obd2_values.rpm * 0.00214285714); // 0.00214285714 = 4200 / 9 where 4200 is the max RPM we want to display when all 9 leds are ON
+        app_state.obd2_values.rpm -= baseline_rpm;
+        app_state.obd2_values.rpm = ceil(app_state.obd2_values.rpm * magic);
 
         if (app_state.obd2_values.rpm > 9) {
             app_state.obd2_values.rpm = 9;
