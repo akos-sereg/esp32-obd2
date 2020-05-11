@@ -2,6 +2,10 @@
 
 /**
  * Calculations based on: https://en.wikipedia.org/wiki/OBD-II_PIDs
+ *
+ * Whitespaces are removed from payload!
+ * eg. "NO DATA" is now "NODATA"
+ * and "41 04 3E" is now "41043E"
  */
 void handle_obd2_response(char *obd2_response, int is_lcd_value_request) {
     // sample responses:
@@ -20,6 +24,18 @@ void handle_obd2_response(char *obd2_response, int is_lcd_value_request) {
     char hex_buf[3];
     double fuel_level;
     int fuel_in_liter;
+
+    if (strlen(obd2_response) >= 6
+        && obd2_response[0] == 'N'
+        && obd2_response[1] == 'O'
+        && obd2_response[2] == 'D'
+        && obd2_response[3] == 'A'
+        && obd2_response[4] == 'T'
+        && obd2_response[5] == 'A') {
+        // NO DATA response, moving forward ...
+        printf("  --> [OBD Response] NO DATA, moving forward");
+        return;
+    }
 
     if (strlen(obd2_response) >= 6
         && ((obd2_response[4] >= '0' && obd2_response[4] <= '9') || (obd2_response[4] >= 'A' && obd2_response[4] <= 'F'))

@@ -79,20 +79,19 @@ void bt_response_chunk_received(uint8_t *obd2_response_chunk, int length) {
         printf("[OBD Response] last chunk received, payload is '%s'\n", bt_response_data);
 
         // handle "NO DATA" response
+        // in case of this message, we have to make sure that this message goes through the response processing mechanism, to
+        // make sure that the next message (send event) will be triggered
         if (bt_response_data_len >= 7
             && bt_response_data[0] == 'N' && bt_response_data[1] == 'O'
             && bt_response_data[3] == 'D' && bt_response_data[4] == 'A' && bt_response_data[5] == 'T' && bt_response_data[6] == 'A') {
-            printf(" -> NO DATA response detected, simulating that data has been processed\n");
-            bt_response_data_len = 0;
-            bt_waiting_for_response = 0;
-            bt_response_processed = 1;
+            printf(" -> NO DATA response detected\n");
             return;
         }
 
         // handle echo - response payload should not be processed
-        if (bt_response_data_len >= 2 && bt_response_data[0] == '0' && bt_response_data[1] == '1') {
+        /*if (bt_response_data_len >= 2 && bt_response_data[0] == '0' && bt_response_data[1] == '1') {
             printf(" -> ignoring echo response\n");
-            bt_response_data_len = 0;
+            bt_response_data_len = 0; // this is safe, communication will not get stuck because we will receive transmission after this point
             bt_waiting_for_response = 1;
             return;
         }
@@ -103,9 +102,10 @@ void bt_response_chunk_received(uint8_t *obd2_response_chunk, int length) {
             bt_response_data_len = 0;
             bt_waiting_for_response = 1;
             return;
-        }
+        }*/
 
         // handle other scenarios, when response does not seem to be a valid OBD2 response
+        // usually ECHO messages or command prompts like this: ">"
         if (bt_response_data_len >= 2 && (bt_response_data[0] != '4' || bt_response_data[1] != '1')) {
             printf(" -> ignoring response, looks like this is not a response value, not starting with 41\n");
             bt_response_data_len = 0;

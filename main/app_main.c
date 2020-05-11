@@ -11,8 +11,9 @@ void main_task(void * pvParameter)
     int cnt = 0;
     int tick_rate_ms = 50;
     int64_t now;
-    int is_lcd_value_request = 0;
-    int is_lcd_request_sent = 0;
+    // int can_send_next_message;
+    // int is_lcd_value_request = 0;
+    // int is_lcd_request_sent = 0;
 
     // initializing app state
     // see include/state.h fore more details about state fields
@@ -33,12 +34,17 @@ void main_task(void * pvParameter)
     while(1) {
         cnt++;
 
+        // measure time spent on displaying "Connecting to bluetooth" and "Connected" LCD messages
         if (cnt == 10) {
             cnt = 0;
-            vTaskDelay(500 / portTICK_RATE_MS);
+            if (app_state.obd2_bluetooth.displaying_connected || !app_state.obd2_bluetooth.is_connected) {
+                vTaskDelay(500 / portTICK_RATE_MS);
+            }
+
             if (app_state.obd2_bluetooth.displaying_connected) {
                 app_state.obd2_bluetooth.displaying_connected_elapsed_ms += 500;
             }
+
             if (!app_state.obd2_bluetooth.is_connected) {
                 app_state.obd2_bluetooth.displaying_connecting_elapsed_ms += 500;
             }
@@ -58,10 +64,21 @@ void main_task(void * pvParameter)
         if (app_state.obd2_bluetooth.is_connected) {
             now = get_epoch_milliseconds();
 
-            if ((get_time_last_lcd_data_received() + BT_LCD_DATA_POLLING_INTERVAL) < now
+            if (bt_response_data_len > 0) {
+                remove_char(bt_response_data, '\n');
+                remove_char(bt_response_data, '\r');
+                handle_obd2_response(bt_response_data, is_lcd_value_request && is_lcd_request_sent);
+
+                bt_response_data_len = 0; // to make sure that response will not be processed in the next iteration
+            }
+
+            // can_send_next_message =
+
+            /*if ((get_time_last_lcd_data_received() + BT_LCD_DATA_POLLING_INTERVAL) < now
                 && !bt_waiting_for_response) {
                 is_lcd_value_request = 1;
             }
+
 
             // keep polling when applicable - last response already processed, poll interval elapsed
             if ((bt_get_last_request_sent() + BT_ENGINE_LOAD_POLL_INTERVAL) < now
@@ -100,6 +117,7 @@ void main_task(void * pvParameter)
                 && (bt_get_last_request_sent() + BT_RESTART_POLLING_ENGINE_LOAD_AFTER) < now) {
                 // bt_send_data(obd2_request_calculated_engine_load());
             }
+            */
         }
 
         // connected to bluetooth OBD2 already, displaying data - one time refresh LCD
