@@ -5,7 +5,6 @@ char bt_response_chunk[BT_RESPONSE_DATA_MAXLEN];
 int bt_response_data_len = 0; // consumers will know that obd2 response is available if this value is greater than 0
 int bt_response_chunk_len = 0;
 int64_t bt_last_request_sent = 0; // epoch in milliseconds
-int64_t time_last_lcd_data_received = (-1 * BT_LCD_DATA_POLLING_INTERVAL); // epoch in milliseconds, pretend that it has been soo long when we received data
 int64_t time_last_lcd_data_sent = 0;
 
 void bt_send_data(char *data) {
@@ -118,16 +117,8 @@ int64_t bt_get_last_request_sent() {
     return bt_last_request_sent;
 }
 
-int64_t get_time_last_lcd_data_received() {
-    return time_last_lcd_data_received;
-}
-
 int64_t get_time_last_lcd_data_sent() {
     return time_last_lcd_data_sent;
-}
-
-void reset_time_last_lcd_data_received() {
-    time_last_lcd_data_received = get_epoch_milliseconds();
 }
 
 void reset_time_last_lcd_data_sent() {
@@ -135,7 +126,7 @@ void reset_time_last_lcd_data_sent() {
 }
 
 void instant_fetch_lcd_data() {
-    time_last_lcd_data_received = (-1 * BT_LCD_DATA_POLLING_INTERVAL);
+    time_last_lcd_data_sent = 0;
 }
 
 

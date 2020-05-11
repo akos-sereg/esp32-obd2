@@ -67,7 +67,7 @@ void main_task(void * pvParameter)
 
             // sending request - realtime RPM or Engine Load - keep polling even if last time we failed to process response
             if ((bt_get_last_request_sent() + BT_ENGINE_LOAD_POLL_INTERVAL) < now) {
-                bt_send_data(LED_STRIP_DISPLAYS_RPM ? obd2_request_rpm() : obd2_request_calculated_engine_load());
+                bt_send_data(LED_STRIP_DISPLAYS_RPM ? obd2_request_engine_rpm() : obd2_request_calculated_engine_load());
             }
 
             // sending request - value for LCD page
