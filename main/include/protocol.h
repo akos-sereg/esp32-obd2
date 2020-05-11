@@ -10,6 +10,7 @@
 
 #include "bt-common.h"
 #include "string-helper.h"
+#include "command-handler.h"
 
 #define BT_RESPONSE_DATA_MAXLEN		32
 #define BT_REQUEST_DATA_MAXLEN		32
@@ -19,9 +20,7 @@
 
 extern char bt_response_data[BT_RESPONSE_DATA_MAXLEN];
 extern int bt_response_data_len;
-extern int bt_response_processed;
 int64_t time_last_lcd_data_received;
-extern int bt_waiting_for_response;
 
 extern void bt_response_chunk_received(uint8_t *chunk, int length);
 extern void bt_send_data(char *);

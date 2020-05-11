@@ -4,10 +4,8 @@ char bt_response_data[BT_RESPONSE_DATA_MAXLEN];
 char bt_response_chunk[BT_RESPONSE_DATA_MAXLEN];
 int bt_response_data_len = 0; // consumers will know that obd2 response is available if this value is greater than 0
 int bt_response_chunk_len = 0;
-int bt_response_processed = 1; // pretend that our starting point is that we processed any data
 int64_t bt_last_request_sent = 0; // epoch in milliseconds
 int64_t time_last_lcd_data_received = (-1 * BT_LCD_DATA_POLLING_INTERVAL); // epoch in milliseconds, pretend that it has been soo long when we received data
-int bt_waiting_for_response = 0;
 
 void bt_send_data(char *data) {
     uint8_t bt_request_data[BT_REQUEST_DATA_MAXLEN];
@@ -35,9 +33,7 @@ void bt_send_data(char *data) {
         printf("ERROR: %s\n", esp_err_to_name(bt_error));
     } else {
         bt_last_request_sent = get_epoch_milliseconds();
-        bt_response_processed = 0;
         bt_response_data_len = 0;
-        bt_waiting_for_response = 1;
     }
 }
 
@@ -70,7 +66,6 @@ void bt_response_chunk_received(uint8_t *obd2_response_chunk, int length) {
         remove_char(bt_response_data, '\n');
         remove_char(bt_response_data, '\r');
         remove_char(bt_response_data, ' ');
-        bt_waiting_for_response = 0;
         bt_response_data_len = strlen(bt_response_data); // consumers rely on this field - if response data length is set, it will be processed soon
 
         // clear chunk
@@ -85,6 +80,7 @@ void bt_response_chunk_received(uint8_t *obd2_response_chunk, int length) {
             && bt_response_data[0] == 'N' && bt_response_data[1] == 'O'
             && bt_response_data[3] == 'D' && bt_response_data[4] == 'A' && bt_response_data[5] == 'T' && bt_response_data[6] == 'A') {
             printf(" -> NO DATA response detected\n");
+            handle_obd2_response(bt_response_data);
             return;
         }
 
@@ -109,9 +105,11 @@ void bt_response_chunk_received(uint8_t *obd2_response_chunk, int length) {
         if (bt_response_data_len >= 2 && (bt_response_data[0] != '4' || bt_response_data[1] != '1')) {
             printf(" -> ignoring response, looks like this is not a response value, not starting with 41\n");
             bt_response_data_len = 0;
-            bt_waiting_for_response = 1;
             return;
         }
+
+        // make sure that data will be processed
+        handle_obd2_response(bt_response_data);
     }
 }
 
