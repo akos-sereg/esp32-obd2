@@ -35,7 +35,11 @@ void main_task(void * pvParameter)
 
         if (cnt == 10) {
             cnt = 0;
-            vTaskDelay(500 / portTICK_RATE_MS);
+
+            if (app_state.obd2_bluetooth.displaying_connected || !app_state.obd2_bluetooth.is_connected) {
+                vTaskDelay(500 / portTICK_RATE_MS);
+            }
+
             if (app_state.obd2_bluetooth.displaying_connected) {
                 app_state.obd2_bluetooth.displaying_connected_elapsed_ms += 500;
             }
