@@ -11,8 +11,9 @@ void main_task(void * pvParameter)
     int cnt = 0;
     int tick_rate_ms = 50;
     int64_t now;
-    int is_lcd_value_request = 0;
-    int is_lcd_request_sent = 0;
+    // int can_send_next_message;
+    // int is_lcd_value_request = 0;
+    // int is_lcd_request_sent = 0;
 
     // initializing app state
     // see include/state.h fore more details about state fields
@@ -33,6 +34,7 @@ void main_task(void * pvParameter)
     while(1) {
         cnt++;
 
+        // measure time spent on displaying "Connecting to bluetooth" and "Connected" LCD messages
         if (cnt == 10) {
             cnt = 0;
 
@@ -43,6 +45,7 @@ void main_task(void * pvParameter)
             if (app_state.obd2_bluetooth.displaying_connected) {
                 app_state.obd2_bluetooth.displaying_connected_elapsed_ms += 500;
             }
+
             if (!app_state.obd2_bluetooth.is_connected) {
                 app_state.obd2_bluetooth.displaying_connecting_elapsed_ms += 500;
             }
@@ -58,51 +61,20 @@ void main_task(void * pvParameter)
             app_state.obd2_bluetooth.displayed_connected = 1;
         }
 
-        // connected to bluetooth, retrieve engine load periodically
+        // connected to bluetooth, poll data periodically - responses will be handled automatically, we don't have to worry about
+        // processing them and triggering the new requests
         if (app_state.obd2_bluetooth.is_connected) {
             now = get_epoch_milliseconds();
 
-            if ((get_time_last_lcd_data_received() + BT_LCD_DATA_POLLING_INTERVAL) < now
-                && !bt_waiting_for_response) {
-                is_lcd_value_request = 1;
+            // sending request - realtime RPM or Engine Load - keep polling even if last time we failed to process response
+            if ((bt_get_last_request_sent() + BT_ENGINE_LOAD_POLL_INTERVAL) < now) {
+                bt_send_data(LED_STRIP_DISPLAYS_RPM ? obd2_request_engine_rpm() : obd2_request_calculated_engine_load());
             }
 
-            // keep polling when applicable - last response already processed, poll interval elapsed
-            if ((bt_get_last_request_sent() + BT_ENGINE_LOAD_POLL_INTERVAL) < now
-                && bt_response_processed) {
-
-                if (is_lcd_value_request) {
-
-                    is_lcd_request_sent = 1;
-                    bt_send_data(get_lcd_page_obd_code()); // OBD PID of current page displayed by LCD
-                } else {
-                    bt_send_data(LED_STRIP_DISPLAYS_RPM ? obd2_request_rpm() : obd2_request_calculated_engine_load());
-                }
-            }
-
-
-            // process incoming data
-            if (!bt_response_processed && bt_response_data_len > 0) {
-                remove_char(bt_response_data, '\n');
-                remove_char(bt_response_data, '\r');
-                handle_obd2_response(bt_response_data, is_lcd_value_request && is_lcd_request_sent);
-
-                if (is_lcd_value_request && is_lcd_request_sent) {
-                    reset_time_last_lcd_data_received();
-                    is_lcd_value_request = 0;
-                    is_lcd_request_sent = 0;
-                }
-
-                bt_response_processed = 1;
-            }
-
-
-            // restart polling if OBD2 did not respond for a while
-            // not sure this is needed - in case led strip got stuck, this might be helpful
-            if (!bt_response_data_len
-                && !bt_response_processed
-                && (bt_get_last_request_sent() + BT_RESTART_POLLING_ENGINE_LOAD_AFTER) < now) {
-                // bt_send_data(obd2_request_calculated_engine_load());
+            // sending request - value for LCD page
+            if ((get_time_last_lcd_data_sent() + BT_LCD_DATA_POLLING_INTERVAL) < now) {
+                bt_send_data(get_lcd_page_obd_code()); // OBD PID of current page displayed by LCD
+                reset_time_last_lcd_data_sent();
             }
         }
 

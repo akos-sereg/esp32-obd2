@@ -9,6 +9,6 @@
 #include "lcd.h"
 #include "app_main.h"
 
-extern void handle_obd2_response(char *obd2_response_chunk, int is_lcd_value_request);
+extern void handle_obd2_response(char *obd2_response_chunk);
 
 #endif
