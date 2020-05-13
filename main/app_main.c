@@ -37,6 +37,7 @@ void main_task(void * pvParameter)
         // measure time spent on displaying "Connecting to bluetooth" and "Connected" LCD messages
         if (cnt == 10) {
             cnt = 0;
+
             if (app_state.obd2_bluetooth.displaying_connected || !app_state.obd2_bluetooth.is_connected) {
                 vTaskDelay(500 / portTICK_RATE_MS);
             }
