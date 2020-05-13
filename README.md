@@ -32,12 +32,22 @@ and other metrics.
 - Your car's average fuel consumption: `AVERAGE_FUEL_CONSUMPTION_PER_100_KM` in `include/app_main.h`
 - Led strip to display Engine Load or RPM: `LED_STRIP_DISPLAYS_RPM` in `include/app_main.h`
 
+## How to test
+
+Download `BT SPP Server` android app, and configure esp32 device to use your phone's MAC address when connecting via 
+bluetooth.
+
+### Led strip
+
+Assuming that your device is configured to show RPM, just type `410C1234` into BT SPP Server app (eg. send it to the device). 
+Device will automatically handle your command as OBD2 response (41) for RPM (0C) with value 0x12 0x34 and it will display it on the led strip.
+
+For Engine Load, use command `41051234` (05 is Engine Load)
+
 ## Status
 
-This is a pilot project, right now it only prints some random stuff, and the Engine Load 
-display is also in demo mode. I am testing the display in the car to validate that it's not 
-disturbing at night / and visible in daylight. Later on it will pull data from OBD2 interface 
-via bluetooth.
+Device can read data from OBD2 via bluetooth, and it can display stuff on LCD, such as "Distance to empty" based on 
+fuel level, Engine coolant temperature, Battery voltage, etc. It can also display Engine Load or RPM on the led strip.
 
 ## Circuit
 

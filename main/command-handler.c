@@ -38,6 +38,7 @@ void handle_obd2_response(char *obd2_response) {
         return;
     }
 
+    // in case response is "410C1234", a = 12 in hex
     if (strlen(obd2_response) >= 6
         && ((obd2_response[4] >= '0' && obd2_response[4] <= '9') || (obd2_response[4] >= 'A' && obd2_response[4] <= 'F'))
         && ((obd2_response[5] >= '0' && obd2_response[5] <= '9') || (obd2_response[5] >= 'A' && obd2_response[5] <= 'F'))) {
@@ -45,6 +46,7 @@ void handle_obd2_response(char *obd2_response) {
         a = strtol(hex_buf, &ptr, 16);
     }
 
+    // in case response is "410C1234", b = 34 in hex
     if (strlen(obd2_response) >= 8
         && ((obd2_response[6] >= '0' && obd2_response[6] <= '9') || (obd2_response[6] >= 'A' && obd2_response[6] <= 'F'))
         && ((obd2_response[7] >= '0' && obd2_response[7] <= '9') || (obd2_response[7] >= 'A' && obd2_response[7] <= 'F'))) {
@@ -84,20 +86,21 @@ void handle_obd2_response(char *obd2_response) {
     remove_char(req_pattern, ' ');
 
     if (strncmp(req_test, req_pattern, 4) == 0) {
+        printf("Detected as RPM value\n");
         int baseline_rpm = 900;
         int max_rpm = 3600;
-        float magic = 9 / (max_rpm - baseline_rpm);
+        double magic = 9 / (double)(max_rpm - baseline_rpm); // 0.00333333333
 
         app_state.obd2_values.rpm = ((256 * a) + b) / 4; // value from 0 to 16383
         app_state.obd2_values.rpm -= baseline_rpm;
-        app_state.obd2_values.rpm = ceil(app_state.obd2_values.rpm * magic);
+        app_state.obd2_values.rpm = ceil((double)(app_state.obd2_values.rpm * (double)magic));
 
         if (app_state.obd2_values.rpm > 9) {
             app_state.obd2_values.rpm = 9;
         }
-
+        printf("Setting led strip status to: %d as a=%d, b=%d\n", app_state.obd2_values.rpm, a, b);
         led_strip_set(app_state.obd2_values.rpm);
-    }
+    } else printf("NOT Detected as RPM value\n");
 
     // Distance to Empty
     sprintf(req_pattern, "%s", obd2_request_fuel_level());
