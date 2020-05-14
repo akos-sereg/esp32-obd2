@@ -1,5 +1,7 @@
 #include "include/lcd.h"
 
+bool lcd_backlight = true;
+
 /*
    Adding / modifying LCD display pages:
    - refresh_lcd_display() to display the text and value
@@ -36,7 +38,7 @@ void i2c_master_init(void)
     i2c_lcd1602_init(lcd_info, smbus_info, true);
 
     // turn on backlight
-    i2c_lcd1602_set_backlight(lcd_info, true);
+    i2c_lcd1602_set_backlight(lcd_info, lcd_backlight);
 }
 
 void lcd_display_text(char *line1, char *line2) {
@@ -47,6 +49,11 @@ void lcd_display_text(char *line1, char *line2) {
 	i2c_lcd1602_move_cursor(lcd_info, 0, 1);
 	i2c_lcd1602_write_string(lcd_info, line2);
     }
+}
+
+void toggle_lcd_backlight() {
+    lcd_backlight = !lcd_backlight;
+    i2c_lcd1602_set_backlight(lcd_info, lcd_backlight);
 }
 
 void refresh_lcd_display() {

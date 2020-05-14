@@ -1,8 +1,10 @@
 #include "include/switches.h"
 
 int SWITCH_1_STATE = -1;
-int MAX_LCD_DISPLAY_MODE = 3; /* max value of LCD_DISPLAY_MODE */
+int MAX_LCD_DISPLAY_MODE = 3; /* max value of LCD_DISPLAY_MODE (4 screens => value should be 3) */
 int LCD_DISPLAY_MODE = 0;
+int64_t sw_key_pressed_at;
+int64_t sw_key_released_at;
 
 static xQueueHandle gpio_evt_queue = NULL;
 
@@ -10,10 +12,6 @@ static void IRAM_ATTR gpio_isr_handler(void* arg)
 {
     uint32_t gpio_num = (uint32_t) arg;
     xQueueSendFromISR(gpio_evt_queue, &gpio_num, NULL);
-}
-
-void read_switch_states() {
-    SWITCH_1_STATE = gpio_get_level(GPIO_INPUT_IO);
 }
 
 void listen_switches(void* arg)
@@ -31,15 +29,31 @@ void listen_switches(void* arg)
                 printf("GPIO[%d] state: %d\n", io_num, current_state);
                 SWITCH_1_STATE = current_state;
 
+                // rising edge
                 if (current_state == 1) {
-                    LCD_DISPLAY_MODE++;
-                    if (LCD_DISPLAY_MODE == (MAX_LCD_DISPLAY_MODE + 1)) {
-                        LCD_DISPLAY_MODE = 0;
-                    }
+                    sw_key_pressed_at = get_epoch_milliseconds();
+                }
 
-                    set_nvs_value(NVS_KEY_MODE, LCD_DISPLAY_MODE);
-                    instant_fetch_lcd_data();
-                    refresh_lcd_display();
+                // falling edge
+                if (current_state == 0) {
+                    sw_key_released_at = get_epoch_milliseconds();
+                    int pressed_elapsed = sw_key_released_at - sw_key_pressed_at;
+
+                    if (pressed_elapsed >= LONG_KEYPRESS_INTERVAL_MS) {
+                        // long key press: control LCD brigtness
+                        toggle_lcd_backlight();
+                    }
+                    else {
+                        // short key press: step to the next screen
+                        LCD_DISPLAY_MODE++;
+                        if (LCD_DISPLAY_MODE == (MAX_LCD_DISPLAY_MODE + 1)) {
+                            LCD_DISPLAY_MODE = 0;
+                        }
+
+                        set_nvs_value(NVS_KEY_MODE, LCD_DISPLAY_MODE);
+                        instant_fetch_lcd_data();
+                        refresh_lcd_display();
+                    }
                 }
             }
         }

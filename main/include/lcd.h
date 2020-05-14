@@ -18,6 +18,7 @@ extern void i2c_master_init(void);
 extern void refresh_lcd_display();
 extern void lcd_display_text(char *line1, char *line2);
 extern char *get_lcd_page_obd_code();
+extern void toggle_lcd_backlight();
 
 i2c_lcd1602_info_t *lcd_info;
 
