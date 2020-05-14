@@ -32,6 +32,7 @@ and other metrics.
 - Your car's average fuel consumption: `AVERAGE_FUEL_CONSUMPTION_PER_100_KM` in `include/app_main.h`
 - Led strip to display Engine Load or RPM: `LED_STRIP_DISPLAYS_RPM` in `include/app_main.h`
 - Long key press interval (to set backlight on/off) `LONG_KEYPRESS_INTERVAL_MS` in `include/switches.h`
+- In case your OBD2 device requires PIN authentication, update this line `memcpy(pin_code, "1234", 4);` in `bluetooth.c`
 
 ## How to test
 

@@ -2,7 +2,7 @@
 
 Below versions are tags in the repo.
 
-## v1.1 - Next
+## v1.1 - Next Release
 - Fuel Pressure - in kPa - (3rd page on LCD) instead of Engine oil temperature
 - Toggle LCD backlight by long pressing navigation button
 - Store and restore backlight state upon launch

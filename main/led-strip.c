@@ -7,7 +7,7 @@
     The first 8 leds are connected to a shift register, therefore they can be
     driven using 3 GPIOs (latch, clock, data). The 9th led (red) is connected
     to an ESP32 output pin.
-    This was a design mistake, I was calculating with 8 leds, but driller and
+    This was a design mistake, I was calculating with 8 leds, but drilled and
     added one more led to the physical display. Whatever.
 */
 #include "include/led-strip.h"
@@ -26,7 +26,6 @@ void engine_load_init() {
 /* value from 0 to 9 */
 void led_strip_set(int value) {
 
-    //gpio_set_level(LED_STRIP_LATCH_GPIO, 1);
     if (value < 0 || value > 9) {
         return;
     }

@@ -67,7 +67,7 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
 
         bt_handle = param->srv_open.handle;
 
-        obd2_init_communication(); // try-me-out
+        obd2_init_communication();
 
         app_state.obd2_bluetooth.is_connected = 1;
 
@@ -83,29 +83,8 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
         ESP_LOGI(SPP_TAG, "ESP_SPP_CL_INIT_EVT");
         break;
     case ESP_SPP_DATA_IND_EVT:
-        // ESP_LOGI(SPP_TAG, "ESP_SPP_DATA_IND_EVT");
-
-        // receive
-        // printf("Received data length: %d\n", param->data_ind.len);
-
-        // clear response data
-        /*for (int i=0; i!=BT_RESPONSE_DATA_MAXLEN; i++) {
-            bt_response_data[i] = 0;
-        }
-
-        for (int i=0; i!=param->data_ind.len; i++) {
-            bt_response_data[i] = param->data_ind.data[i];
-        }
-
-        bt_response_data_len = param->data_ind.len;
-        bt_response_data[param->data_ind.len] = '\0';*/
 
         bt_response_chunk_received(param->data_ind.data, param->data_ind.len);
-
-        /*printf("Received data: '%s'\n", bt_response_data);
-        bt_waiting_for_response = 0;
-        remove_char(bt_response_data, '\n');
-        remove_char(bt_response_data, '\r');*/
 
         break;
     case ESP_SPP_CONG_EVT:

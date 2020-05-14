@@ -39,18 +39,20 @@ void listen_switches(void* arg)
                     sw_key_released_at = get_epoch_milliseconds();
                     int pressed_elapsed = sw_key_released_at - sw_key_pressed_at;
 
+                    // long key press: control LCD brigtness
                     if (pressed_elapsed >= LONG_KEYPRESS_INTERVAL_MS) {
-                        // long key press: control LCD brigtness
                         toggle_lcd_backlight();
                     }
+                    // long key press: control LCD brigtness
                     else {
-                        // short key press: step to the next screen
                         LCD_DISPLAY_MODE++;
                         if (LCD_DISPLAY_MODE == (MAX_LCD_DISPLAY_MODE + 1)) {
                             LCD_DISPLAY_MODE = 0;
                         }
 
                         set_nvs_value(NVS_KEY_MODE, LCD_DISPLAY_MODE);
+
+                        // we dont want to wait until the next lcd data refresh interval to get the screen updated
                         instant_fetch_lcd_data();
                         refresh_lcd_display();
                     }

@@ -1,11 +1,6 @@
 #include "include/app_main.h"
 #include <inttypes.h>
 
-
-/**
-W (20619) BT_RFCOMM: port_rfc_closed RFCOMM connection in state 2 closed: Peer connection failed (res: 16)
-I (20619) SPP_INITIATOR_DEMO: ESP_SPP_CLOSE_EVT
-*/
 void main_task(void * pvParameter)
 {
     int cnt = 0;
