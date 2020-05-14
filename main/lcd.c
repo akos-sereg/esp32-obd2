@@ -79,7 +79,7 @@ void refresh_lcd_display() {
             break;
 
         case 2:
-            if (app_state.obd2_values.engine_oil_temp_in_celsius > 125) {
+            /*if (app_state.obd2_values.engine_oil_temp_in_celsius > 125) {
                 sprintf(line, "%d %cC (High)", app_state.obd2_values.engine_oil_temp_in_celsius, 223);
             } else if (app_state.obd2_values.engine_oil_temp_in_celsius > 110) {
                 sprintf(line, "%d %cC (OK)", app_state.obd2_values.engine_oil_temp_in_celsius, 223);
@@ -89,6 +89,19 @@ void refresh_lcd_display() {
 
             i2c_lcd1602_clear(lcd_info);
             i2c_lcd1602_write_string(lcd_info, "Engine Oil");
+            i2c_lcd1602_move_cursor(lcd_info, 0, 1);
+            i2c_lcd1602_write_string(lcd_info, line);*/
+
+            if (app_state.obd2_values.fuel_pressure < 210) {
+                sprintf(line, "%d kPa (Low)", app_state.obd2_values.fuel_pressure);
+            } else if (app_state.obd2_values.fuel_pressure < 410) {
+                sprintf(line, "%d kPa (OK)", app_state.obd2_values.fuel_pressure);
+            } else {
+                sprintf(line, "%d kPa (High)", app_state.obd2_values.fuel_pressure);
+            }
+
+            i2c_lcd1602_clear(lcd_info);
+            i2c_lcd1602_write_string(lcd_info, "Fuel Pressure");
             i2c_lcd1602_move_cursor(lcd_info, 0, 1);
             i2c_lcd1602_write_string(lcd_info, line);
             break;
@@ -138,7 +151,7 @@ char *get_lcd_page_obd_code() {
             return obd2_request_engine_coolant_temp();
 
         case 2:
-            return obd2_request_engine_oil_temp();
+            return obd2_request_fuel_pressure();
 
         case 3:
             return obd2_request_battery_voltage();

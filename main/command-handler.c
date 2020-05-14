@@ -124,6 +124,16 @@ void handle_obd2_response(char *obd2_response) {
         refresh_lcd_display();
     }
 
+    // Fuel Pressure
+    sprintf(req_pattern, "%s", obd2_request_fuel_pressure());
+    remove_char(req_pattern, ' ');
+
+    if (strncmp(req_test, req_pattern, 4) == 0) {
+        app_state.obd2_values.fuel_pressure = 3 * a;
+        printf("  --> Fuel Pressure: %d kPa\n", app_state.obd2_values.fuel_pressure);
+        refresh_lcd_display();
+    }
+
     // Battery Voltage
     sprintf(req_pattern, "%s", obd2_request_battery_voltage());
     remove_char(req_pattern, ' ');
