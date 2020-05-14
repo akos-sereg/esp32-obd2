@@ -31,6 +31,7 @@ and other metrics.
 - Your OBD2 device's MAC address: `remote_device_addr` in `bluetooth.c`
 - Your car's average fuel consumption: `AVERAGE_FUEL_CONSUMPTION_PER_100_KM` in `include/app_main.h`
 - Led strip to display Engine Load or RPM: `LED_STRIP_DISPLAYS_RPM` in `include/app_main.h`
+- Long key press interval (to set backlight on/off) `LONG_KEYPRESS_INTERVAL_MS` in `include/switches.h`
 
 ## How to test
 
