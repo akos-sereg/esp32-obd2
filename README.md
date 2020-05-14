@@ -28,7 +28,7 @@ and other metrics.
 - Polling interval of Engine Load (led strip): `BT_ENGINE_LOAD_POLL_INTERVAL` in `include/protocol.h`
 - Restart polling Engine Load in case of OBD2 failure: `BT_RESTART_POLLING_ENGINE_LOAD_AFTER` in `include/protocol.h`
 - Fuel tank in litres: `FUEL_TANK_LITER` in `include/app_main.h`
-- Your OBD2 device's MAC address: `remote_device_addr` in `bluetooth.c`
+- Your OBD2 device's MAC address: `remote_device_addr_1` in `bluetooth.c`
 - Your car's average fuel consumption: `AVERAGE_FUEL_CONSUMPTION_PER_100_KM` in `include/app_main.h`
 - Led strip to display Engine Load or RPM: `LED_STRIP_DISPLAYS_RPM` in `include/app_main.h`
 - Long key press interval (to set backlight on/off) `LONG_KEYPRESS_INTERVAL_MS` in `include/switches.h`
@@ -96,7 +96,10 @@ espressif/esp-idf commit hash 451f69cc2e11cf45e3a72905c9fb162ca9a08936
 ## Configure
 
 Get your OBD2 bluetooth device's address (plug into your car, check what device you see on your smartphone). 
-Update `main/bluetooth.c`, find `remote_device_addr` and set it to your OBD2 device's address.
+Update `main/bluetooth.c`, find `remote_device_addr_1` and set it to your OBD2 device's address. You can set a 
+secondary MAC address as well: `remote_device_addr_2`, esp32 device will connect to the one that is available. 
+Whenever you are testing in your car, disable your bluetooth to make sure that device will connect to the real OBD2 device, 
+not to your phone.
 
 ## Build
 

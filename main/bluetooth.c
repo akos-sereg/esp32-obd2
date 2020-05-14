@@ -26,9 +26,8 @@ static const esp_spp_sec_t sec_mask_authorize = ESP_SPP_SEC_AUTHORIZE;
 static const esp_spp_role_t role_master = ESP_SPP_ROLE_MASTER;
 
 static esp_bd_addr_t peer_bd_addr;
-static const char remote_device_addr[] = "00:0d:18:3a:61:fc"; // OBD2 device
-// static const char remote_device_addr[] = "30:ae:a4:6a:a9:7a"; // Test device
-// static const char remote_device_addr[] = "3c:05:18:7c:76:3d"; // Samsung J5
+static const char remote_device_addr_1[] = "00:0d:18:3a:61:fc"; // OBD2 device
+static const char remote_device_addr_2[] = "3c:05:18:7c:76:3d"; // Samsung J5
 
 uint8_t remote_bda;
 static const esp_bt_inq_mode_t inq_mode = ESP_BT_INQ_MODE_GENERAL_INQUIRY;
@@ -117,7 +116,8 @@ static void esp_bt_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *pa
           param->disc_res.bda[4],
           param->disc_res.bda[5]);
 
-        if (strncmp(remote_device_addr, bt_address, strlen(remote_device_addr)) == 0) {
+        if (strncmp(remote_device_addr_1, bt_address, strlen(remote_device_addr_1)) == 0
+            || strncmp(remote_device_addr_2, bt_address, strlen(remote_device_addr_2)) == 0) {
 
           printf("OBD2 device found: %s\n", bt_address);
 

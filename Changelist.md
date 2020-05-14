@@ -8,6 +8,7 @@ Below versions are tags in the repo.
 - Toggle LCD backlight by long pressing navigation button
 - Store and restore backlight state upon launch
 - OBD2 protocol initialization (eg. ask device to not send unnecessary load)
+- Auto connect to known devices based on MAC address (to avoid configuration overhead)
 
 ## v1.0 - First working prototype
  - Led strip displays current RPM real-time
