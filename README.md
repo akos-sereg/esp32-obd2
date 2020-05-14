@@ -35,7 +35,9 @@ and other metrics.
 ## How to test
 
 Download `BT SPP Server` android app, and configure esp32 device to use your phone's MAC address when connecting via 
-bluetooth.
+bluetooth. Open BT SPP Server app, and wait until it says "Connected". If esp32 device cannot connect to your server, 
+open bluetooth settings (eg. list bluetooth devices in range), then navigate back to the app - this usually helps, most probably 
+android starts advertising when you are at bluetooth settings screen.
 
 ### Led strip
 
@@ -101,3 +103,8 @@ Options choose step:
     2. enter menuconfig "Component config", choose "Bluetooth"
     3. enter menu Bluetooth, choose "Classic Bluetooth" and "SPP Profile"
     4. choose your options.
+
+## TODOs
+
+- Using list of acceptable devices (eg. phone's MAC at home, OBD2 MAC at car), to avoid configuration overhead
+- Initialize OBD device, echo off, etc.

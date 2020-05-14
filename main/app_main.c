@@ -11,9 +11,6 @@ void main_task(void * pvParameter)
     int cnt = 0;
     int tick_rate_ms = 50;
     int64_t now;
-    // int can_send_next_message;
-    // int is_lcd_value_request = 0;
-    // int is_lcd_request_sent = 0;
 
     // initializing app state
     // see include/state.h fore more details about state fields
@@ -80,7 +77,7 @@ void main_task(void * pvParameter)
 
         // connected to bluetooth OBD2 already, displaying data - one time refresh LCD
         if (app_state.obd2_bluetooth.displaying_connected) {
-            app_state.obd2_bluetooth.displaying_connected_elapsed_ms += 50;
+            app_state.obd2_bluetooth.displaying_connected_elapsed_ms += tick_rate_ms;
             if (app_state.obd2_bluetooth.displaying_connected_elapsed_ms > 3000) {
                 app_state.obd2_bluetooth.displaying_connected = 0;
                 refresh_lcd_display();

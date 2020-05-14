@@ -39,6 +39,6 @@
 #define MAX_RPM_AT_NORMAL_USAGE 3600
 
 // if this value is set to 0, led strip will display Engine Load
-#define LED_STRIP_DISPLAYS_RPM   1
+#define LED_STRIP_DISPLAYS_RPM   0
 
 #endif
