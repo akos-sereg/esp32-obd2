@@ -5,6 +5,7 @@ esp_err_t nvs_error;
 int nvs_flash_is_open;
 
 char *NVS_KEY_MODE = "mode";
+char *NVS_KEY_LCD_BACKLIGHT = "bl";
 
 void init_nvs_store() {
     nvs_error = nvs_flash_init();

@@ -38,6 +38,8 @@ void i2c_master_init(void)
     i2c_lcd1602_init(lcd_info, smbus_info, true);
 
     // turn on backlight
+    int32_t backlight_on = get_nvs_value(NVS_KEY_LCD_BACKLIGHT);
+    lcd_backlight = (backlight_on == -1 || backlight_on == 1) ? true : false;
     i2c_lcd1602_set_backlight(lcd_info, lcd_backlight);
 }
 
@@ -46,14 +48,15 @@ void lcd_display_text(char *line1, char *line2) {
     i2c_lcd1602_write_string(lcd_info, line1);
 
     if (line2 != NULL) {
-	i2c_lcd1602_move_cursor(lcd_info, 0, 1);
-	i2c_lcd1602_write_string(lcd_info, line2);
+        i2c_lcd1602_move_cursor(lcd_info, 0, 1);
+        i2c_lcd1602_write_string(lcd_info, line2);
     }
 }
 
 void toggle_lcd_backlight() {
     lcd_backlight = !lcd_backlight;
     i2c_lcd1602_set_backlight(lcd_info, lcd_backlight);
+    set_nvs_value(NVS_KEY_LCD_BACKLIGHT, lcd_backlight ? 1 : 0);
 }
 
 void refresh_lcd_display() {
