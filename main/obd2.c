@@ -8,8 +8,8 @@ char *obd2_request_fuel_pressure() { return "01 0A"; }
 char *obd2_request_battery_voltage() { return "01 42"; }
 
 void obd2_init_communication() {
-    // bt_send_data("AT E0"); // echo off
-    // bt_send_data("AT L0"); // turns off extra line feed and carriage return
+    bt_send_data("AT E0"); // echo off
+    bt_send_data("AT L0"); // turns off extra line feed and carriage return
     // bt_send_data("AT H0"); // turns off headers and checksum to be sent
     // bt_send_data("ATAT2"); // turn adaptive timing to 2
     // bt_send_data("ATST0A"); // set timeout to 10 * 4 = 40msec, allows +20 queries per second. This is the maximum wait-time. ATAT will decide if it should wait shorter or not

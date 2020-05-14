@@ -6,6 +6,7 @@ Below versions are tags in the repo.
 - Fuel Pressure - in kPa - (3rd page on LCD) instead of Engine oil temperature
 - Toggle LCD backlight by long pressing navigation button
 - Store and restore backlight state upon launch
+- OBD2 protocol initialization (eg. ask device to not send unnecessary load)
 
 ## v1.0 - First working prototype
  - Led strip displays current RPM real-time
