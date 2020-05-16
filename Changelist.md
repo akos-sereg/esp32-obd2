@@ -9,6 +9,7 @@ Below versions are tags in the repo.
 - Store and restore backlight state upon launch
 - OBD2 protocol initialization (eg. ask device to not send unnecessary load)
 - Auto connect to known devices based on MAC address (to avoid configuration overhead)
+- Avoid flickering on LCD update when updating with the same text
 
 ## v1.0 - First working prototype
  - Led strip displays current RPM real-time

@@ -1,6 +1,7 @@
 #include "include/lcd.h"
 
 bool lcd_backlight = true;
+char previous_data_line[32];
 
 /*
    Adding / modifying LCD display pages:
@@ -74,6 +75,10 @@ void refresh_lcd_display() {
     switch (LCD_DISPLAY_MODE) {
         case 0:
             sprintf(line, "%d km", app_state.obd2_values.distance_to_empty_km);
+            if (strcmp(previous_data_line, line) == 0) {
+                // we want to display the same value, ignore updating LCD, as LCD updates are always visible (eg. flickering)
+                return;
+            }
             i2c_lcd1602_clear(lcd_info);
             i2c_lcd1602_write_string(lcd_info, "Dist. to empty");
             i2c_lcd1602_move_cursor(lcd_info, 5, 1);
@@ -82,6 +87,10 @@ void refresh_lcd_display() {
 
         case 1:
             sprintf(line, "%d %cC", app_state.obd2_values.coolant_temp_in_celsius, 223);
+            if (strcmp(previous_data_line, line) == 0) {
+                // we want to display the same value, ignore updating LCD, as LCD updates are always visible (eg. flickering)
+                return;
+            }
             i2c_lcd1602_clear(lcd_info);
             i2c_lcd1602_write_string(lcd_info, "Engine Coolant");
             i2c_lcd1602_move_cursor(lcd_info, 5, 1);
@@ -108,6 +117,11 @@ void refresh_lcd_display() {
                 sprintf(line, "%d kPa (OK)", app_state.obd2_values.fuel_pressure);
             } else {
                 sprintf(line, "%d kPa (High)", app_state.obd2_values.fuel_pressure);
+            }
+
+            if (strcmp(previous_data_line, line) == 0) {
+                // we want to display the same value, ignore updating LCD, as LCD updates are always visible (eg. flickering)
+                return;
             }
 
             i2c_lcd1602_clear(lcd_info);
@@ -142,13 +156,23 @@ void refresh_lcd_display() {
                 sprintf(line, "%.1f V (0%%)", app_state.obd2_values.battery_voltage);
             }
 
+            if (strcmp(previous_data_line, line) == 0) {
+                // we want to display the same value, ignore updating LCD, as LCD updates are always visible (eg. flickering)
+                return;
+            }
+
             i2c_lcd1602_clear(lcd_info);
             i2c_lcd1602_write_string(lcd_info, "Battery");
             i2c_lcd1602_move_cursor(lcd_info, 0, 1);
             i2c_lcd1602_write_string(lcd_info, line);
             // i2c_lcd1602_set_backlight(lcd_info, false);
             break;
+
+        default:
+            return;
     }
+
+    sprintf(previous_data_line, "%s", line);
 }
 
 char *get_lcd_page_obd_code() {
