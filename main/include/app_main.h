@@ -27,7 +27,7 @@
 
 // liter/100km - this one is for "distance to empty" calculation - use upper bound of real consumption
 // to make sure that displayed "distance to empty" value is safe
-#define AVERAGE_FUEL_CONSUMPTION_PER_100_KM    8
+#define AVERAGE_FUEL_CONSUMPTION_PER_100_KM    7.2
 
 // baseline RPM: the RPM value once your car warmed up, at neutral, when you are not pushing the gas pedal
 // this value is used when calculating LED strip value (eg. how many leds should be ON) - we do not want

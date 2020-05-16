@@ -107,9 +107,9 @@ void handle_obd2_response(char *obd2_response) {
     remove_char(req_pattern, ' ');
 
     if (strncmp(req_test, req_pattern, 4) == 0) {
-        fuel_level = a / 2.55; // fuel level in % (value from 0 to 100)
+        fuel_level = a / (double)2.55; // fuel level in % (value from 0 to 100)
         fuel_in_liter = ceil((double)(fuel_level / 100) * FUEL_TANK_LITER);
-        app_state.obd2_values.distance_to_empty_km = ((double)fuel_in_liter / AVERAGE_FUEL_CONSUMPTION_PER_100_KM) * 100;
+        app_state.obd2_values.distance_to_empty_km = ((double)fuel_in_liter / (double)AVERAGE_FUEL_CONSUMPTION_PER_100_KM) * 100;
         printf("  --> Distance to empty set to: %d\n", app_state.obd2_values.distance_to_empty_km);
         refresh_lcd_display();
     }
