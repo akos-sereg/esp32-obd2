@@ -9,6 +9,7 @@ without any extra configuration.
 
 ## v1.1.1 - Next
 - Engine Oil temperature page added
+- LCD backlight UX fix: toggle backlight right after 1200 ms (eg. dont wait until falling edge)
 
 ## v1.1.0
 - Fuel Pressure - in kPa - (3rd page on LCD) instead of Engine oil temperature
