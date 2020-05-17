@@ -2,7 +2,7 @@
 
 Below versions are tags in the repo.
 
-## v1.1 - Next Release
+## v1.1.0
 - Fuel Pressure - in kPa - (3rd page on LCD) instead of Engine oil temperature
 - Led strip to display Engine Load instead of RPM
 - Toggle LCD backlight by long pressing navigation button
