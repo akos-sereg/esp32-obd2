@@ -19,6 +19,7 @@
 
 extern int SWITCH_1_STATE;
 extern int LCD_DISPLAY_MODE;
+extern int MAX_LCD_DISPLAY_MODE;
 
 extern void listen_switches(void* arg);
 extern void setup_switches();

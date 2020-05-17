@@ -1,6 +1,11 @@
 # Changelog
 
-Below versions are tags in the repo.
+Below versions are tags in the repo. All versions are representing a state which can be deployed to esp32 device 
+without any extra configuration.
+
+- Bugs: Fuel Pressure is not displayed
+- To be tested: Engine Oil temperature data, Fuel Pressure data from OBD2
+- Improvement: toggle lcd backlight after 1200 ms instead of falling edge
 
 ## v1.1.0
 - Fuel Pressure - in kPa - (3rd page on LCD) instead of Engine oil temperature
@@ -10,9 +15,6 @@ Below versions are tags in the repo.
 - OBD2 protocol initialization (eg. ask device to not send unnecessary load)
 - Auto connect to known devices based on MAC address (to avoid configuration overhead)
 - Avoid flickering on LCD update when updating with the same text
-
-- Bugs: Fuel Pressure is not displayed
-- To be tested: Engine Oil temperature data, Fuel Pressure data from OBD2
 
 ## v1.0 - First working prototype
  - Led strip displays current RPM real-time

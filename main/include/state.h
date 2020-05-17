@@ -18,6 +18,7 @@ typedef struct app_state_t {
     int distance_to_empty_km;
     int coolant_temp_in_celsius;
     int fuel_pressure; // value in kPa
+    int engine_oil_temp_in_celsius;
     double battery_voltage;
     int rpm; // value from 0 to 9
 

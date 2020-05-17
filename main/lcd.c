@@ -6,10 +6,9 @@ char previous_data_line[32];
 /*
    Adding / modifying LCD display pages:
    - refresh_lcd_display() to display the text and value
-   - refresh_lcd_display() to know the max number of pages
    - get_lcd_page_obd_code() to respond the correct OBD PID
-   - command-handler.c - handle_obd2_response() to convert response based on LCD_DISPLAY_MODE
-   - switches.c - MAX_LCD_DISPLAY_MODE to be set (refactor and use this value in refresh_lcd_display)
+   - command-handler.c - handle_obd2_response() to calculate value
+   - switches.c - MAX_LCD_DISPLAY_MODE to be set
 */
 void i2c_master_init(void)
 {
@@ -68,8 +67,8 @@ void refresh_lcd_display() {
         LCD_DISPLAY_MODE = 0;
     }
 
-    if (LCD_DISPLAY_MODE > 3) {
-        LCD_DISPLAY_MODE = 3;
+    if (LCD_DISPLAY_MODE > MAX_LCD_DISPLAY_MODE) {
+        LCD_DISPLAY_MODE = MAX_LCD_DISPLAY_MODE;
     }
 
     switch (LCD_DISPLAY_MODE) {
@@ -168,6 +167,20 @@ void refresh_lcd_display() {
             // i2c_lcd1602_set_backlight(lcd_info, false);
             break;
 
+        case 4:
+            sprintf(line, "%d %cC", app_state.obd2_values.engine_oil_temp_in_celsius, 223);
+
+            if (strcmp(previous_data_line, line) == 0) {
+                // we want to display the same value, ignore updating LCD, as LCD updates are always visible (eg. flickering)
+                return;
+            }
+
+            i2c_lcd1602_clear(lcd_info);
+            i2c_lcd1602_write_string(lcd_info, "Engine Oil");
+            i2c_lcd1602_move_cursor(lcd_info, 0, 1);
+            i2c_lcd1602_write_string(lcd_info, line);
+            break;
+
         default:
             return;
     }
@@ -189,6 +202,9 @@ char *get_lcd_page_obd_code() {
 
         case 3:
             return obd2_request_battery_voltage();
+
+        case 4:
+            return obd2_request_engine_oil_temp();
     }
 
     return NULL;

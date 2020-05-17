@@ -1,7 +1,7 @@
 #include "include/switches.h"
 
 int SWITCH_1_STATE = -1;
-int MAX_LCD_DISPLAY_MODE = 3; /* max value of LCD_DISPLAY_MODE (4 screens => value should be 3) */
+int MAX_LCD_DISPLAY_MODE = 4; /* max value of LCD_DISPLAY_MODE (4 screens => value should be 3) */
 int LCD_DISPLAY_MODE = 0;
 int64_t sw_key_pressed_at;
 int64_t sw_key_released_at;

@@ -143,4 +143,14 @@ void handle_obd2_response(char *obd2_response) {
         printf("  --> Battery Voltage: %f\n", app_state.obd2_values.battery_voltage);
         refresh_lcd_display();
     }
+
+    // Engine oil temperature
+    sprintf(req_pattern, "%s", obd2_request_engine_oil_temp());
+    remove_char(req_pattern, ' ');
+
+    if (strncmp(req_test, req_pattern, 4) == 0) {
+        app_state.obd2_values.engine_oil_temp_in_celsius = a - 40;
+        printf("  --> Engine Oil: %d C\n", app_state.obd2_values.engine_oil_temp_in_celsius);
+        refresh_lcd_display();
+    }
 }

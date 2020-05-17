@@ -9,6 +9,7 @@ extern char *obd2_request_engine_coolant_temp();
 extern char *obd2_request_fuel_level();
 extern char *obd2_request_fuel_pressure();
 extern char *obd2_request_battery_voltage();
+extern char *obd2_request_engine_oil_temp();
 extern void obd2_init_communication();
 
 #endif
