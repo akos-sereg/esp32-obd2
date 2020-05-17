@@ -28,7 +28,7 @@ void listen_switches(void* arg)
 
             // check if button has been pressed for long: lcd backlight should be toggled or  not
             if (sw_key_pressed_at > 0) {
-                pressed_elapsed = sw_key_released_at - sw_key_pressed_at;
+                pressed_elapsed = get_epoch_milliseconds() - sw_key_pressed_at;
                 if (pressed_elapsed >= LONG_KEYPRESS_INTERVAL_MS) {
                     toggle_lcd_backlight();
                     sw_key_pressed_at = 0;
