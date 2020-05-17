@@ -11,6 +11,9 @@ Below versions are tags in the repo.
 - Auto connect to known devices based on MAC address (to avoid configuration overhead)
 - Avoid flickering on LCD update when updating with the same text
 
+- Bugs: Fuel Pressure is not displayed
+- To be tested: Engine Oil temperature data, Fuel Pressure data from OBD2
+
 ## v1.0 - First working prototype
  - Led strip displays current RPM real-time
  - LCD displaying: 

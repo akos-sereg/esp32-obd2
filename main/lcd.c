@@ -62,7 +62,7 @@ void toggle_lcd_backlight() {
 
 void refresh_lcd_display() {
     char line[32];
-    i2c_lcd1602_set_backlight(lcd_info, true);
+    // i2c_lcd1602_set_backlight(lcd_info, true);
 
     if (LCD_DISPLAY_MODE < 0) {
         LCD_DISPLAY_MODE = 0;

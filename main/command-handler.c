@@ -139,7 +139,7 @@ void handle_obd2_response(char *obd2_response) {
     remove_char(req_pattern, ' ');
 
     if (strncmp(req_test, req_pattern, 4) == 0) {
-        app_state.obd2_values.battery_voltage = ((255 * a) + b) / 1000;
+        app_state.obd2_values.battery_voltage = (double)((double)(255 * a) + b) / (double)1000;
         printf("  --> Battery Voltage: %f\n", app_state.obd2_values.battery_voltage);
         refresh_lcd_display();
     }
