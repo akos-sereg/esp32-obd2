@@ -61,7 +61,6 @@ void toggle_lcd_backlight() {
 
 void refresh_lcd_display() {
     char line[32];
-    // i2c_lcd1602_set_backlight(lcd_info, true);
 
     if (LCD_DISPLAY_MODE < 0) {
         LCD_DISPLAY_MODE = 0;
@@ -164,11 +163,16 @@ void refresh_lcd_display() {
             i2c_lcd1602_write_string(lcd_info, "Battery");
             i2c_lcd1602_move_cursor(lcd_info, 0, 1);
             i2c_lcd1602_write_string(lcd_info, line);
-            // i2c_lcd1602_set_backlight(lcd_info, false);
             break;
 
         case 4:
-            sprintf(line, "%d %cC", app_state.obd2_values.engine_oil_temp_in_celsius, 223);
+            if (app_state.obd2_values.engine_oil_temp_in_celsius > 125) {
+                sprintf(line, "%d %cC (High)", app_state.obd2_values.engine_oil_temp_in_celsius, 223);
+            } else if (app_state.obd2_values.engine_oil_temp_in_celsius > 110) {
+                sprintf(line, "%d %cC (OK)", app_state.obd2_values.engine_oil_temp_in_celsius, 223);
+            } else {
+                sprintf(line, "%d %cC (Warm-up)", app_state.obd2_values.engine_oil_temp_in_celsius, 223);
+            }
 
             if (strcmp(previous_data_line, line) == 0) {
                 // we want to display the same value, ignore updating LCD, as LCD updates are always visible (eg. flickering)
