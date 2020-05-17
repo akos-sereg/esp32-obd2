@@ -7,6 +7,9 @@ without any extra configuration.
 - To be tested: Engine Oil temperature data, Fuel Pressure data from OBD2
 - Improvement: toggle lcd backlight after 1200 ms instead of falling edge
 
+## v1.1.1 - Next
+- Engine Oil temperature page added
+
 ## v1.1.0
 - Fuel Pressure - in kPa - (3rd page on LCD) instead of Engine oil temperature
 - Led strip to display Engine Load instead of RPM

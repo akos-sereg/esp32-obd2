@@ -18,12 +18,22 @@ void listen_switches(void* arg)
 {
     uint32_t io_num;
     int current_state;
+    int pressed_elapsed;
 
     for(;;) {
         if(xQueueReceive(gpio_evt_queue, &io_num, portMAX_DELAY)) {
             vTaskDelay(50 / portTICK_RATE_MS);
 
             current_state = gpio_get_level(io_num);
+
+            // check if button has been pressed for long: lcd backlight should be toggled or  not
+            if (sw_key_pressed_at > 0) {
+                pressed_elapsed = sw_key_released_at - sw_key_pressed_at;
+                if (pressed_elapsed >= LONG_KEYPRESS_INTERVAL_MS) {
+                    toggle_lcd_backlight();
+                    sw_key_pressed_at = 0;
+                }
+            }
 
             if (io_num == GPIO_INPUT_IO && SWITCH_1_STATE != current_state) {
                 printf("GPIO[%d] state: %d\n", io_num, current_state);
@@ -36,15 +46,11 @@ void listen_switches(void* arg)
 
                 // falling edge
                 if (current_state == 0) {
-                    sw_key_released_at = get_epoch_milliseconds();
-                    int pressed_elapsed = sw_key_released_at - sw_key_pressed_at;
 
-                    // long key press: control LCD brigtness
-                    if (pressed_elapsed >= LONG_KEYPRESS_INTERVAL_MS) {
-                        toggle_lcd_backlight();
-                    }
-                    // long key press: control LCD brigtness
-                    else {
+
+                    // short key press: navigate to next screen
+                    // sw_key_pressed_at would be set to 0 already if it was a long key press
+                    if (sw_key_pressed_at > 0) {
                         LCD_DISPLAY_MODE++;
                         if (LCD_DISPLAY_MODE == (MAX_LCD_DISPLAY_MODE + 1)) {
                             LCD_DISPLAY_MODE = 0;
@@ -56,6 +62,8 @@ void listen_switches(void* arg)
                         instant_fetch_lcd_data();
                         refresh_lcd_display();
                     }
+
+                    sw_key_pressed_at = 0;
                 }
             }
         }
