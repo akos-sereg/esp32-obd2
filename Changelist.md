@@ -10,6 +10,7 @@ without any extra configuration.
 ## v1.1.1 - Next
 - Engine Oil temperature page added
 - LCD backlight UX fix: toggle backlight right after 1200 ms (eg. dont wait until falling edge)
+- "Dist. to empty" was changing in every 13 kms only (eg. one liter). Fixing to display in 1km resolution
 
 ## v1.1.0
 - Fuel Pressure - in kPa - (3rd page on LCD) instead of Engine oil temperature
