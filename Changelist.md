@@ -3,12 +3,9 @@
 Below versions are tags in the repo. All versions are representing a state which can be deployed to esp32 device 
 without any extra configuration.
 
-- Bugs: Fuel Pressure is not displayed
-- To be tested: Engine Oil temperature data, Fuel Pressure data from OBD2
 - Improvement: toggle lcd backlight after 1200 ms instead of falling edge
 
 ## v1.1.1 - Next
-- Engine Oil temperature page added
 - LCD backlight UX fix: toggle backlight right after 1200 ms (eg. dont wait until falling edge)
 - "Dist. to empty" was changing in every 13 kms only (eg. one liter). Fixing to display in 1km resolution
 

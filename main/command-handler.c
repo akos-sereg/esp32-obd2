@@ -124,16 +124,6 @@ void handle_obd2_response(char *obd2_response) {
         refresh_lcd_display();
     }
 
-    // Fuel Pressure
-    sprintf(req_pattern, "%s", obd2_request_fuel_pressure());
-    remove_char(req_pattern, ' ');
-
-    if (strncmp(req_test, req_pattern, 4) == 0) {
-        app_state.obd2_values.fuel_pressure = 3 * a;
-        printf("  --> Fuel Pressure: %d kPa\n", app_state.obd2_values.fuel_pressure);
-        refresh_lcd_display();
-    }
-
     // Battery Voltage
     sprintf(req_pattern, "%s", obd2_request_battery_voltage());
     remove_char(req_pattern, ' ');
@@ -141,16 +131,6 @@ void handle_obd2_response(char *obd2_response) {
     if (strncmp(req_test, req_pattern, 4) == 0) {
         app_state.obd2_values.battery_voltage = (double)((double)(255 * a) + b) / (double)1000;
         printf("  --> Battery Voltage: %f\n", app_state.obd2_values.battery_voltage);
-        refresh_lcd_display();
-    }
-
-    // Engine oil temperature
-    sprintf(req_pattern, "%s", obd2_request_engine_oil_temp());
-    remove_char(req_pattern, ' ');
-
-    if (strncmp(req_test, req_pattern, 4) == 0) {
-        app_state.obd2_values.engine_oil_temp_in_celsius = a - 40;
-        printf("  --> Engine Oil: %d C\n", app_state.obd2_values.engine_oil_temp_in_celsius);
         refresh_lcd_display();
     }
 }
