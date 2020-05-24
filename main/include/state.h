@@ -16,9 +16,9 @@ typedef struct app_state_t {
   struct obd2_values {
     int engine_load; // value from 0 to 9
     int distance_to_empty_km;
+    double fuel_level; // value from 0% to 100%
+    double fuel_in_liter;
     int coolant_temp_in_celsius;
-    int fuel_pressure; // value in kPa
-    int engine_oil_temp_in_celsius;
     double battery_voltage;
     int rpm; // value from 0 to 9
 

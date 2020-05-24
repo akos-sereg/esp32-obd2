@@ -72,14 +72,14 @@ void refresh_lcd_display() {
 
     switch (LCD_DISPLAY_MODE) {
         case 0:
-            sprintf(line, "%d km", app_state.obd2_values.distance_to_empty_km);
+            sprintf(line, "%d km %.1f l", app_state.obd2_values.distance_to_empty_km, app_state.obd2_values.fuel_in_liter);
             if (strcmp(previous_data_line, line) == 0) {
                 // we want to display the same value, ignore updating LCD, as LCD updates are always visible (eg. flickering)
                 return;
             }
             i2c_lcd1602_clear(lcd_info);
-            i2c_lcd1602_write_string(lcd_info, "Dist. to empty");
-            i2c_lcd1602_move_cursor(lcd_info, 5, 1);
+            i2c_lcd1602_write_string(lcd_info, "Fuel");
+            i2c_lcd1602_move_cursor(lcd_info, 0, 1);
             i2c_lcd1602_write_string(lcd_info, line);
             break;
 
